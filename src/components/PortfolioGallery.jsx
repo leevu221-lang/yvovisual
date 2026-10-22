@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
   Camera, Heart, MapPin, Eye, ArrowRight, Search, 
-  Sparkles, Compass, Sliders
+  ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal
 } from 'lucide-react';
 
 export default function PortfolioGallery() {
   const { photos, setSelectedPhoto, toggleLikePhoto, photographerInfo, setCurrentView } = useApp();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('slider'); // 'slider' | 'grid'
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const sliderRef = useRef(null);
 
   const categories = [
     { id: 'all', label: 'Tất Cả' },
@@ -29,6 +35,41 @@ export default function PortfolioGallery() {
       photo.lens.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // Update scroll metrics
+  const updateScrollMetrics = () => {
+    if (!sliderRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < maxScroll - 10);
+    
+    if (maxScroll > 0) {
+      setScrollProgress((scrollLeft / maxScroll) * 100);
+    } else {
+      setScrollProgress(0);
+    }
+  };
+
+  useEffect(() => {
+    updateScrollMetrics();
+    // Reset scroll to 0 when category changes
+    if (sliderRef.current) {
+      sliderRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+  }, [selectedCategory, searchQuery, filteredPhotos.length]);
+
+  const handleSlide = (direction) => {
+    if (!sliderRef.current) return;
+    const cardWidth = sliderRef.current.clientWidth > 768 ? 440 : 320;
+    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+    
+    sliderRef.current.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  };
 
   return (
     <div>
@@ -129,10 +170,10 @@ export default function PortfolioGallery() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery-section" style={{ padding: '80px 0 120px' }}>
+      <section id="gallery-section" style={{ padding: '80px 0 120px', overflow: 'hidden' }}>
         <div className="container">
           {/* Header & Filter Controls */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', marginBottom: '44px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '32px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px' }}>
               <div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gold-primary)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '6px' }}>
@@ -143,49 +184,150 @@ export default function PortfolioGallery() {
                 </h2>
               </div>
 
-              {/* Minimal Search Box */}
-              <div style={{ position: 'relative', width: '320px', maxWidth: '100%' }}>
-                <Search
-                  size={16}
-                  style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
-                />
-                <input
-                  type="text"
-                  placeholder="Tìm theo chủ đề, địa điểm, camera..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-input"
-                  style={{ paddingLeft: '44px', borderRadius: 'var(--radius-full)', fontSize: '0.86rem' }}
-                />
+              {/* Minimal Search & View Toggle */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ position: 'relative', width: '280px', maxWidth: '100%' }}>
+                  <Search
+                    size={16}
+                    style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Tìm tác phẩm, địa điểm..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-input"
+                    style={{ paddingLeft: '44px', borderRadius: 'var(--radius-full)', fontSize: '0.86rem' }}
+                  />
+                </div>
+
+                {/* View Mode Toggle (Slider vs Grid) */}
+                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', padding: '4px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-glass)' }}>
+                  <button
+                    onClick={() => setViewMode('slider')}
+                    title="Chế độ lướt qua lại (Slider)"
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: 'var(--radius-full)',
+                      border: 'none',
+                      background: viewMode === 'slider' ? '#ffffff' : 'transparent',
+                      color: viewMode === 'slider' ? '#08090b' : 'var(--text-muted)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <SlidersHorizontal size={14} />
+                    <span style={{ display: 'none', md: 'inline' }}>Lướt Ngang</span>
+                  </button>
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    title="Chế độ lưới (Grid)"
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: 'var(--radius-full)',
+                      border: 'none',
+                      background: viewMode === 'grid' ? '#ffffff' : 'transparent',
+                      color: viewMode === 'grid' ? '#08090b' : 'var(--text-muted)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <LayoutGrid size={14} />
+                    <span style={{ display: 'none', md: 'inline' }}>Lưới</span>
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Minimalist Category Filter Pills */}
-            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
-              {categories.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  style={{
-                    padding: '8px 20px',
-                    borderRadius: 'var(--radius-full)',
-                    background: selectedCategory === cat.id ? '#ffffff' : 'rgba(255, 255, 255, 0.035)',
-                    color: selectedCategory === cat.id ? '#08090b' : 'var(--text-muted)',
-                    fontWeight: selectedCategory === cat.id ? 600 : 400,
-                    fontSize: '0.85rem',
-                    border: selectedCategory === cat.id ? '1px solid #ffffff' : '1px solid var(--border-glass)',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
-                >
-                  {cat.label}
-                </button>
-              ))}
+            {/* Filter Pills & Slider Arrow Nav Controls */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+              {/* Minimalist Category Filter Pills */}
+              <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
+                {categories.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: 'var(--radius-full)',
+                      background: selectedCategory === cat.id ? '#ffffff' : 'rgba(255, 255, 255, 0.035)',
+                      color: selectedCategory === cat.id ? '#08090b' : 'var(--text-muted)',
+                      fontWeight: selectedCategory === cat.id ? 600 : 400,
+                      fontSize: '0.84rem',
+                      border: selectedCategory === cat.id ? '1px solid #ffffff' : '1px solid var(--border-glass)',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider Arrow Buttons (when in Slider mode) */}
+              {viewMode === 'slider' && filteredPhotos.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <button
+                    onClick={() => handleSlide('prev')}
+                    disabled={!canScrollLeft}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid var(--border-glass)',
+                      color: canScrollLeft ? '#ffffff' : 'var(--text-dim)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: canScrollLeft ? 'pointer' : 'default',
+                      opacity: canScrollLeft ? 1 : 0.4,
+                      transition: 'all 0.2s',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    title="Lướt sang trái"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleSlide('next')}
+                    disabled={!canScrollRight}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid var(--border-glass)',
+                      color: canScrollRight ? '#ffffff' : 'var(--text-dim)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: canScrollRight ? 'pointer' : 'default',
+                      opacity: canScrollRight ? 1 : 0.4,
+                      transition: 'all 0.2s',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    title="Lướt sang phải"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Photos Grid */}
+          {/* Empty State */}
           {filteredPhotos.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '90px 20px', background: 'rgba(255, 255, 255, 0.015)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--border-subtle)' }}>
               <Camera size={44} color="var(--text-dim)" style={{ marginBottom: '16px' }} />
@@ -199,7 +341,150 @@ export default function PortfolioGallery() {
                 Đặt lại bộ lọc
               </button>
             </div>
+          ) : viewMode === 'slider' ? (
+            /* ================= HORIZONTAL SLIDER VIEW ================= */
+            <div style={{ position: 'relative' }}>
+              <div
+                ref={sliderRef}
+                onScroll={updateScrollMetrics}
+                style={{
+                  display: 'flex',
+                  gap: '24px',
+                  overflowX: 'auto',
+                  scrollSnapType: 'x mandatory',
+                  padding: '8px 4px 24px',
+                  scrollBehavior: 'smooth',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
+                {filteredPhotos.map((photo) => (
+                  <div
+                    key={photo.id}
+                    className="photo-card"
+                    onClick={() => setSelectedPhoto(photo)}
+                    style={{
+                      flex: '0 0 clamp(300px, 32vw, 420px)',
+                      scrollSnapAlign: 'start',
+                      height: 'clamp(460px, 58vh, 560px)',
+                      borderRadius: 'var(--radius-md)',
+                      overflow: 'hidden',
+                      position: 'relative',
+                      boxShadow: '0 12px 32px rgba(0, 0, 0, 0.5)'
+                    }}
+                  >
+                    <img
+                      src={photo.image}
+                      alt={photo.title}
+                      loading="lazy"
+                    />
+
+                    {/* Top Badges */}
+                    <div style={{ position: 'absolute', top: '16px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
+                      <span
+                        style={{
+                          backdropFilter: 'blur(12px)',
+                          background: 'rgba(8, 9, 11, 0.75)',
+                          border: '1px solid var(--border-glass)',
+                          color: '#fff',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          padding: '4px 12px',
+                          borderRadius: 'var(--radius-full)'
+                        }}
+                      >
+                        {photo.category}
+                      </span>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLikePhoto(photo.id);
+                        }}
+                        style={{
+                          background: 'rgba(8, 9, 11, 0.75)',
+                          backdropFilter: 'blur(12px)',
+                          border: '1px solid var(--border-glass)',
+                          borderRadius: 'var(--radius-full)',
+                          padding: '5px 12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          color: photo.isLiked ? '#f43f5e' : '#fff',
+                          cursor: 'pointer',
+                          fontSize: '0.78rem',
+                          fontWeight: 600,
+                          transition: 'all 0.2s'
+                        }}
+                        title="Thả tim tác phẩm"
+                      >
+                        <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
+                        <span>{photo.likes}</span>
+                      </button>
+                    </div>
+
+                    {/* Minimalist Bottom Overlay */}
+                    <div className="photo-overlay">
+                      <h3
+                        style={{
+                          fontSize: '1.25rem',
+                          fontWeight: 600,
+                          color: '#ffffff',
+                          marginBottom: '6px',
+                          letterSpacing: '-0.01em'
+                        }}
+                      >
+                        {photo.title}
+                      </h3>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: '12px' }}>
+                        <MapPin size={13} color="var(--gold-primary)" />
+                        <span>{photo.location}</span>
+                      </div>
+
+                      {/* Minimalist Camera Specs */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          fontSize: '0.75rem',
+                          color: 'var(--text-dim)',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                          paddingTop: '10px'
+                        }}
+                      >
+                        <Camera size={13} color="var(--gold-primary)" />
+                        <span>{photo.camera} • {photo.settings.aperture} • {photo.settings.shutter}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Minimalist Scroll Progress Track */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px', padding: '0 4px' }}>
+                <div style={{ flex: 1, height: '2px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '999px', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${Math.max(15, scrollProgress)}%`,
+                      background: 'linear-gradient(90deg, var(--gold-primary), #ffffff)',
+                      borderRadius: '999px',
+                      transition: 'width 0.15s ease-out'
+                    }}
+                  />
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontVariantNumeric: 'tabular-nums' }}>
+                  {filteredPhotos.length} tác phẩm (Vuốt hoặc bấm mũi tên để lướt)
+                </div>
+              </div>
+            </div>
           ) : (
+            /* ================= GRID VIEW ================= */
             <div
               style={{
                 display: 'grid',
@@ -213,7 +498,6 @@ export default function PortfolioGallery() {
                   className="photo-card"
                   onClick={() => setSelectedPhoto(photo)}
                 >
-                  {/* Photo Container */}
                   <div
                     style={{
                       position: 'relative',
@@ -294,7 +578,6 @@ export default function PortfolioGallery() {
                         <span>{photo.location}</span>
                       </div>
 
-                      {/* Minimalist Camera Specs */}
                       <div
                         style={{
                           display: 'flex',
