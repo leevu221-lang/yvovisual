@@ -7,32 +7,52 @@ const AppContext = createContext(null);
 export const AppProvider = ({ children }) => {
   // 1. Current User State
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('minhvu_current_user');
-    return saved ? JSON.parse(saved) : INITIAL_USERS[1]; // Default to student Đỗ Hoàng Long for quick preview
+    try {
+      const saved = localStorage.getItem('minhvu_current_user');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_USERS[1];
+    } catch {
+      return INITIAL_USERS[1];
+    }
   });
 
   // 2. Users List
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('minhvu_users');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
+    try {
+      const saved = localStorage.getItem('minhvu_users');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_USERS;
+    } catch {
+      return INITIAL_USERS;
+    }
   });
 
   // 3. Courses List
   const [courses, setCourses] = useState(() => {
-    const saved = localStorage.getItem('minhvu_courses');
-    return saved ? JSON.parse(saved) : INITIAL_COURSES;
+    try {
+      const saved = localStorage.getItem('minhvu_courses');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_COURSES;
+    } catch {
+      return INITIAL_COURSES;
+    }
   });
 
   // 4. Photos Gallery List
   const [photos, setPhotos] = useState(() => {
-    const saved = localStorage.getItem('minhvu_photos');
-    return saved ? JSON.parse(saved) : INITIAL_PHOTOS;
+    try {
+      const saved = localStorage.getItem('minhvu_photos');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_PHOTOS;
+    } catch {
+      return INITIAL_PHOTOS;
+    }
   });
 
   // 5. Orders List
   const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem('minhvu_orders');
-    return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    try {
+      const saved = localStorage.getItem('minhvu_orders');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_ORDERS;
+    } catch {
+      return INITIAL_ORDERS;
+    }
   });
 
   // Navigation & Modals State
