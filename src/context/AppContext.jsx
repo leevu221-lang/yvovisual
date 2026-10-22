@@ -82,6 +82,7 @@ export const AppProvider = ({ children }) => {
   const [albumManagerOpen, setAlbumManagerOpen] = useState(false);
   const [firebaseModalOpen, setFirebaseModalOpen] = useState(false);
   const [isFirebaseConnected, setIsFirebaseConnected] = useState(false);
+  const [cloudSyncStatus, setCloudSyncStatus] = useState('synced'); // 'synced' | 'saving' | 'error'
   
   // Payment & Auth Modals
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
@@ -169,19 +170,29 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Like a photo
+  // Like a photo (with Auto-save to Cloud)
   const toggleLikePhoto = (photoId) => {
+    let updatedPhoto = null;
     setPhotos(prev => prev.map(p => {
       if (p.id === photoId) {
         const isLiked = p.isLiked;
-        return {
+        updatedPhoto = {
           ...p,
           likes: isLiked ? p.likes - 1 : p.likes + 1,
           isLiked: !isLiked
         };
+        return updatedPhoto;
       }
       return p;
     }));
+
+    const { isConfigured } = initFirebase();
+    if (isConfigured && updatedPhoto) {
+      setCloudSyncStatus('saving');
+      savePhotoToCloud(updatedPhoto).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
+    }
   };
 
   // Start buying a course
@@ -316,8 +327,9 @@ export const AppProvider = ({ children }) => {
     showToast('Đã xóa khóa học khỏi hệ thống', 'info');
   };
 
-  // Admin: Save/Add Photo (with Firebase sync)
+  // Admin: Save/Add Photo (with Auto Firebase Sync)
   const savePhoto = async (photoData) => {
+    setCloudSyncStatus('saving');
     let finalPhoto = { ...photoData };
     if (!finalPhoto.id) {
       finalPhoto.id = `photo-${Date.now()}`;
@@ -344,23 +356,29 @@ export const AppProvider = ({ children }) => {
     });
 
     if (isConfigured) {
-      savePhotoToCloud(finalPhoto);
+      await savePhotoToCloud(finalPhoto);
+      setTimeout(() => setCloudSyncStatus('synced'), 800);
+    } else {
+      setCloudSyncStatus('synced');
     }
 
-    showToast(photoData.id ? 'Cập nhật tác phẩm thành công!' : 'Đã lưu và xuất bản tác phẩm!', 'success');
+    showToast(photoData.id ? 'Đã tự động cập nhật tác phẩm!' : 'Đã tự động lưu & xuất bản tác phẩm!', 'success');
   };
 
-  // Admin: Delete Photo (with Firebase sync)
+  // Admin: Delete Photo (with Auto Firebase Sync)
   const deletePhoto = (photoId) => {
     setPhotos(prev => prev.filter(p => p.id !== photoId));
     const { isConfigured } = initFirebase();
     if (isConfigured) {
-      deletePhotoFromCloud(photoId);
+      setCloudSyncStatus('saving');
+      deletePhotoFromCloud(photoId).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
     }
     showToast('Đã xóa ảnh khỏi Gallery', 'info');
   };
 
-  // Add / Create Album (with Firebase sync)
+  // Add / Create Album (with Auto Firebase Sync)
   const addAlbum = (albumName) => {
     if (!albumName || !albumName.trim()) {
       showToast('Vui lòng nhập tên album', 'error');
@@ -386,14 +404,17 @@ export const AppProvider = ({ children }) => {
     
     const { isConfigured } = initFirebase();
     if (isConfigured) {
-      saveAlbumToCloud(newAlbum);
+      setCloudSyncStatus('saving');
+      saveAlbumToCloud(newAlbum).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
     }
 
     showToast(`Đã tạo album mới: "${trimmed}"`, 'success');
     return newAlbum;
   };
 
-  // Rename Album (with Firebase sync)
+  // Rename Album (with Auto Firebase Sync)
   const renameAlbum = (albumId, newLabel) => {
     if (!newLabel || !newLabel.trim()) return;
     const trimmed = newLabel.trim();
@@ -401,13 +422,16 @@ export const AppProvider = ({ children }) => {
     
     const { isConfigured } = initFirebase();
     if (isConfigured) {
-      saveAlbumToCloud({ id: albumId, label: trimmed });
+      setCloudSyncStatus('saving');
+      saveAlbumToCloud({ id: albumId, label: trimmed }).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
     }
 
     showToast(`Đã đổi tên album thành: "${trimmed}"`, 'success');
   };
 
-  // Delete Album (with Firebase sync)
+  // Delete Album (with Auto Firebase Sync)
   const deleteAlbum = (albumId) => {
     if (albums.length <= 1) {
       showToast('Cần giữ lại ít nhất một album', 'warning');
@@ -419,15 +443,34 @@ export const AppProvider = ({ children }) => {
 
     const { isConfigured } = initFirebase();
     if (isConfigured) {
-      deleteAlbumFromCloud(albumId);
+      setCloudSyncStatus('saving');
+      deleteAlbumFromCloud(albumId).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
     }
 
     showToast('Đã xóa album và chuyển các ảnh liên quan sang album khác', 'info');
   };
 
-  // Change Photo's Album
+  // Change Photo's Album (with Auto Firebase Sync)
   const changePhotoAlbum = (photoId, newAlbumId) => {
-    setPhotos(prev => prev.map(p => p.id === photoId ? { ...p, category: newAlbumId } : p));
+    let updatedPhoto = null;
+    setPhotos(prev => prev.map(p => {
+      if (p.id === photoId) {
+        updatedPhoto = { ...p, category: newAlbumId };
+        return updatedPhoto;
+      }
+      return p;
+    }));
+
+    const { isConfigured } = initFirebase();
+    if (isConfigured && updatedPhoto) {
+      setCloudSyncStatus('saving');
+      savePhotoToCloud(updatedPhoto).finally(() => {
+        setTimeout(() => setCloudSyncStatus('synced'), 800);
+      });
+    }
+
     const albumName = albums.find(a => a.id === newAlbumId)?.label || newAlbumId;
     showToast(`Đã chuyển tác phẩm sang album "${albumName}"!`, 'success');
   };
@@ -494,6 +537,7 @@ export const AppProvider = ({ children }) => {
         setFirebaseModalOpen,
         isFirebaseConnected,
         setIsFirebaseConnected,
+        cloudSyncStatus,
         openUploadModal,
         addAlbum,
         renameAlbum,
