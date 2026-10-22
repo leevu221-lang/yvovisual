@@ -13,6 +13,7 @@
   "dependencies": {
     "@rolldown/binding-darwin-arm64": "^1.2.11",
     "canvas-confetti": "^1.9.4",
+    "firebase": "^13.1.0",
     "lucide-react": "^1.48.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

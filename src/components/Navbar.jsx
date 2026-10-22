@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
+import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown, Cloud } from 'lucide-react';
 
 export default function Navbar() {
   const {
@@ -10,7 +10,9 @@ export default function Navbar() {
     setCurrentView,
     switchRole,
     setAuthModalOpen,
-    setAuthMode
+    setAuthMode,
+    setFirebaseModalOpen,
+    isFirebaseConnected
   } = useApp();
 
   const [roleDockOpen, setRoleDockOpen] = useState(true);
@@ -98,7 +100,38 @@ export default function Navbar() {
           </nav>
 
           {/* User Account / Auth Actions */}
-          <div className="nav-actions">
+          <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Firebase Cloud Sync Button */}
+            <button
+              onClick={() => setFirebaseModalOpen(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                background: isFirebaseConnected ? 'rgba(34, 197, 94, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                border: isFirebaseConnected ? '1px solid rgba(34, 197, 94, 0.35)' : '1px solid var(--border-glass)',
+                color: isFirebaseConnected ? '#4ade80' : 'var(--text-muted)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              title={isFirebaseConnected ? 'Firebase Cloud: Đã kết nối & đang đồng bộ' : 'Bấm để kết nối cơ sở dữ liệu Firebase Cloud'}
+            >
+              <Cloud size={14} color={isFirebaseConnected ? '#22c55e' : 'var(--gold-primary)'} />
+              <span>{isFirebaseConnected ? 'Cloud Sync' : 'Lưu Lên Firebase'}</span>
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: isFirebaseConnected ? '#22c55e' : '#eab308'
+                }}
+              />
+            </button>
+
             {currentUser ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div

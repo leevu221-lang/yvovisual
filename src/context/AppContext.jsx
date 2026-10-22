@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PHOTOGRAPHER_INFO, INITIAL_PHOTOS, INITIAL_COURSES, INITIAL_ORDERS, INITIAL_USERS, INITIAL_ALBUMS } from '../data/initialData';
 import confetti from 'canvas-confetti';
+import { 
+  initFirebase, savePhotoToCloud, deletePhotoFromCloud, 
+  saveAlbumToCloud, deleteAlbumFromCloud, uploadImageToStorage 
+} from '../services/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const AppContext = createContext(null);
 
@@ -75,6 +80,8 @@ export const AppProvider = ({ children }) => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState(null);
   const [albumManagerOpen, setAlbumManagerOpen] = useState(false);
+  const [firebaseModalOpen, setFirebaseModalOpen] = useState(false);
+  const [isFirebaseConnected, setIsFirebaseConnected] = useState(false);
   
   // Payment & Auth Modals
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
@@ -109,6 +116,35 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('minhvu_orders', JSON.stringify(orders));
   }, [orders]);
+
+  // Real-time Cloud Sync with Firebase Firestore
+  useEffect(() => {
+    const { isConfigured, db } = initFirebase();
+    setIsFirebaseConnected(isConfigured);
+
+    if (isConfigured && db) {
+      // Real-time listener for albums
+      const unsubAlbums = onSnapshot(collection(db, 'albums'), (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudAlbums = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          setAlbums(cloudAlbums);
+        }
+      }, (err) => console.warn('Firestore albums listener notice:', err));
+
+      // Real-time listener for photos
+      const unsubPhotos = onSnapshot(collection(db, 'photos'), (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudPhotos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          setPhotos(cloudPhotos);
+        }
+      }, (err) => console.warn('Firestore photos listener notice:', err));
+
+      return () => {
+        unsubAlbums();
+        unsubPhotos();
+      };
+    }
+  }, []);
 
   const showToast = (message, type = 'success') => {
     setToast({ id: Date.now(), message, type });
@@ -280,37 +316,57 @@ export const AppProvider = ({ children }) => {
     showToast('Đã xóa khóa học khỏi hệ thống', 'info');
   };
 
-  // Admin: Save/Add Photo
-  const savePhoto = (photoData) => {
-    if (photoData.id) {
-      setPhotos(prev => prev.map(p => p.id === photoData.id ? photoData : p));
-      showToast('Cập nhật ảnh triển lãm thành công!', 'success');
-    } else {
-      const newPhoto = {
-        ...photoData,
-        id: `photo-${Date.now()}`,
-        likes: 0,
-        date: new Date().toISOString().split('T')[0]
-      };
-      setPhotos(prev => [newPhoto, ...prev]);
-      showToast('Thêm tác phẩm vào Gallery thành công!', 'success');
+  // Admin: Save/Add Photo (with Firebase sync)
+  const savePhoto = async (photoData) => {
+    let finalPhoto = { ...photoData };
+    if (!finalPhoto.id) {
+      finalPhoto.id = `photo-${Date.now()}`;
+      finalPhoto.likes = 0;
+      finalPhoto.date = new Date().toISOString().split('T')[0];
     }
+
+    // If Firebase is connected and image is data URL, upload to Firebase Storage
+    const { isConfigured } = initFirebase();
+    if (isConfigured && finalPhoto.image?.startsWith('data:')) {
+      try {
+        const cloudUrl = await uploadImageToStorage(finalPhoto.image, finalPhoto.id);
+        if (cloudUrl) {
+          finalPhoto.image = cloudUrl;
+        }
+      } catch (err) {
+        console.warn('Could not upload to Firebase Storage, keeping local:', err);
+      }
+    }
+
+    setPhotos(prev => {
+      const exists = prev.some(p => p.id === finalPhoto.id);
+      return exists ? prev.map(p => p.id === finalPhoto.id ? finalPhoto : p) : [finalPhoto, ...prev];
+    });
+
+    if (isConfigured) {
+      savePhotoToCloud(finalPhoto);
+    }
+
+    showToast(photoData.id ? 'Cập nhật tác phẩm thành công!' : 'Đã lưu và xuất bản tác phẩm!', 'success');
   };
 
-  // Admin: Delete Photo
+  // Admin: Delete Photo (with Firebase sync)
   const deletePhoto = (photoId) => {
     setPhotos(prev => prev.filter(p => p.id !== photoId));
+    const { isConfigured } = initFirebase();
+    if (isConfigured) {
+      deletePhotoFromCloud(photoId);
+    }
     showToast('Đã xóa ảnh khỏi Gallery', 'info');
   };
 
-  // Add / Create Album
+  // Add / Create Album (with Firebase sync)
   const addAlbum = (albumName) => {
     if (!albumName || !albumName.trim()) {
       showToast('Vui lòng nhập tên album', 'error');
       return null;
     }
     const trimmed = albumName.trim();
-    // Generate clean id
     const baseSlug = trimmed
       .toLowerCase()
       .normalize('NFD')
@@ -319,7 +375,6 @@ export const AppProvider = ({ children }) => {
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '') || `album-${Date.now()}`;
 
-    // Ensure unique id
     let uniqueId = baseSlug;
     let counter = 1;
     while (albums.some(a => a.id === uniqueId)) {
@@ -328,28 +383,45 @@ export const AppProvider = ({ children }) => {
 
     const newAlbum = { id: uniqueId, label: trimmed };
     setAlbums(prev => [...prev, newAlbum]);
+    
+    const { isConfigured } = initFirebase();
+    if (isConfigured) {
+      saveAlbumToCloud(newAlbum);
+    }
+
     showToast(`Đã tạo album mới: "${trimmed}"`, 'success');
     return newAlbum;
   };
 
-  // Rename Album
+  // Rename Album (with Firebase sync)
   const renameAlbum = (albumId, newLabel) => {
     if (!newLabel || !newLabel.trim()) return;
     const trimmed = newLabel.trim();
     setAlbums(prev => prev.map(a => a.id === albumId ? { ...a, label: trimmed } : a));
+    
+    const { isConfigured } = initFirebase();
+    if (isConfigured) {
+      saveAlbumToCloud({ id: albumId, label: trimmed });
+    }
+
     showToast(`Đã đổi tên album thành: "${trimmed}"`, 'success');
   };
 
-  // Delete Album
+  // Delete Album (with Firebase sync)
   const deleteAlbum = (albumId) => {
     if (albums.length <= 1) {
       showToast('Cần giữ lại ít nhất một album', 'warning');
       return;
     }
     const fallbackCategory = albums.find(a => a.id !== albumId)?.id || 'general';
-    // Reassign photos in this album to fallback
     setPhotos(prev => prev.map(p => p.category === albumId ? { ...p, category: fallbackCategory } : p));
     setAlbums(prev => prev.filter(a => a.id !== albumId));
+
+    const { isConfigured } = initFirebase();
+    if (isConfigured) {
+      deleteAlbumFromCloud(albumId);
+    }
+
     showToast('Đã xóa album và chuyển các ảnh liên quan sang album khác', 'info');
   };
 
@@ -418,6 +490,10 @@ export const AppProvider = ({ children }) => {
         setEditingPhoto,
         albumManagerOpen,
         setAlbumManagerOpen,
+        firebaseModalOpen,
+        setFirebaseModalOpen,
+        isFirebaseConnected,
+        setIsFirebaseConnected,
         openUploadModal,
         addAlbum,
         renameAlbum,
