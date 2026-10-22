@@ -2,11 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
   Camera, Heart, MapPin, Eye, ArrowRight, Search, 
-  ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal
+  ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal,
+  UploadCloud, Edit2, Layers
 } from 'lucide-react';
 
 export default function PortfolioGallery() {
-  const { photos, setSelectedPhoto, toggleLikePhoto, photographerInfo, setCurrentView } = useApp();
+  const { 
+    photos, setSelectedPhoto, toggleLikePhoto, 
+    photographerInfo, setCurrentView, albums, openUploadModal 
+  } = useApp();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('slider'); // 'slider' | 'grid'
@@ -18,11 +22,7 @@ export default function PortfolioGallery() {
 
   const categories = [
     { id: 'all', label: 'Tất Cả' },
-    { id: 'wedding', label: 'Cưới & Phóng Sự' },
-    { id: 'portrait', label: 'Chân Dung Nghệ Thuật' },
-    { id: 'landscape', label: 'Phong Cảnh' },
-    { id: 'commercial', label: 'Thời Trang & Editorial' },
-    { id: 'street', label: 'Đời Thường' }
+    ...albums
   ];
 
   // Filtering logic
@@ -246,6 +246,23 @@ export default function PortfolioGallery() {
                     <span style={{ display: 'none', md: 'inline' }}>Lưới</span>
                   </button>
                 </div>
+
+                {/* Upload Photo & Album Management Button */}
+                <button
+                  onClick={() => openUploadModal(null)}
+                  className="btn btn-primary"
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.84rem',
+                    gap: '6px',
+                    whiteSpace: 'nowrap'
+                  }}
+                  title="Tải ảnh mới hoặc chỉnh sửa/tạo album"
+                >
+                  <UploadCloud size={15} />
+                  <span>+ Tải Ảnh / Đổi Album</span>
+                </button>
               </div>
             </div>
 
@@ -396,34 +413,62 @@ export default function PortfolioGallery() {
                           borderRadius: 'var(--radius-full)'
                         }}
                       >
-                        {photo.category}
+                        {albums.find(a => a.id === photo.category)?.label || photo.category}
                       </span>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLikePhoto(photo.id);
-                        }}
-                        style={{
-                          background: 'rgba(8, 9, 11, 0.75)',
-                          backdropFilter: 'blur(12px)',
-                          border: '1px solid var(--border-glass)',
-                          borderRadius: 'var(--radius-full)',
-                          padding: '5px 12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          color: photo.isLiked ? '#f43f5e' : '#fff',
-                          cursor: 'pointer',
-                          fontSize: '0.78rem',
-                          fontWeight: 600,
-                          transition: 'all 0.2s'
-                        }}
-                        title="Thả tim tác phẩm"
-                      >
-                        <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
-                        <span>{photo.likes}</span>
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openUploadModal(photo);
+                          }}
+                          style={{
+                            background: 'rgba(8, 9, 11, 0.75)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid var(--border-glass)',
+                            borderRadius: 'var(--radius-full)',
+                            padding: '5px 11px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            color: 'var(--gold-light)',
+                            cursor: 'pointer',
+                            fontSize: '0.72rem',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                          }}
+                          title="Đổi album hoặc sửa thông số ảnh"
+                        >
+                          <Edit2 size={12} />
+                          <span>Đổi Album</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleLikePhoto(photo.id);
+                          }}
+                          style={{
+                            background: 'rgba(8, 9, 11, 0.75)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid var(--border-glass)',
+                            borderRadius: 'var(--radius-full)',
+                            padding: '5px 12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            color: photo.isLiked ? '#f43f5e' : '#fff',
+                            cursor: 'pointer',
+                            fontSize: '0.78rem',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                          }}
+                          title="Thả tim tác phẩm"
+                        >
+                          <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
+                          <span>{photo.likes}</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Minimalist Bottom Overlay */}
@@ -529,34 +574,62 @@ export default function PortfolioGallery() {
                           borderRadius: 'var(--radius-full)'
                         }}
                       >
-                        {photo.category}
+                        {albums.find(a => a.id === photo.category)?.label || photo.category}
                       </span>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLikePhoto(photo.id);
-                        }}
-                        style={{
-                          background: 'rgba(8, 9, 11, 0.75)',
-                          backdropFilter: 'blur(12px)',
-                          border: '1px solid var(--border-glass)',
-                          borderRadius: 'var(--radius-full)',
-                          padding: '5px 12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          color: photo.isLiked ? '#f43f5e' : '#fff',
-                          cursor: 'pointer',
-                          fontSize: '0.78rem',
-                          fontWeight: 600,
-                          transition: 'all 0.2s'
-                        }}
-                        title="Thả tim tác phẩm"
-                      >
-                        <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
-                        <span>{photo.likes}</span>
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openUploadModal(photo);
+                          }}
+                          style={{
+                            background: 'rgba(8, 9, 11, 0.75)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid var(--border-glass)',
+                            borderRadius: 'var(--radius-full)',
+                            padding: '5px 11px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            color: 'var(--gold-light)',
+                            cursor: 'pointer',
+                            fontSize: '0.72rem',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                          }}
+                          title="Đổi album hoặc sửa thông số ảnh"
+                        >
+                          <Edit2 size={12} />
+                          <span>Đổi Album</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleLikePhoto(photo.id);
+                          }}
+                          style={{
+                            background: 'rgba(8, 9, 11, 0.75)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid var(--border-glass)',
+                            borderRadius: 'var(--radius-full)',
+                            padding: '5px 12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            color: photo.isLiked ? '#f43f5e' : '#fff',
+                            cursor: 'pointer',
+                            fontSize: '0.78rem',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                          }}
+                          title="Thả tim tác phẩm"
+                        >
+                          <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
+                          <span>{photo.likes}</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Minimalist Bottom Overlay */}

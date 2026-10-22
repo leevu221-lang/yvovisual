@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
   X, ChevronLeft, ChevronRight, Heart, Camera, MapPin, 
-  Calendar, Eye, Maximize, ZoomIn, ZoomOut, Share2, Download, Info
+  Calendar, Eye, Maximize, ZoomIn, ZoomOut, Share2, Download, Info, Edit2
 } from 'lucide-react';
 
 export default function LightboxModal() {
-  const { selectedPhoto, setSelectedPhoto, photos, toggleLikePhoto, showToast } = useApp();
+  const { 
+    selectedPhoto, setSelectedPhoto, photos, 
+    toggleLikePhoto, showToast, albums, openUploadModal 
+  } = useApp();
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -90,6 +93,16 @@ export default function LightboxModal() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => openUploadModal(selectedPhoto)}
+            style={{ fontSize: '0.8rem', gap: '6px' }}
+            title="Đổi album hoặc chỉnh sửa thông số tác phẩm"
+          >
+            <Edit2 size={14} />
+            <span>Đổi Album</span>
+          </button>
+
           <button
             className="btn btn-secondary btn-sm"
             onClick={handleZoomIn}
@@ -217,16 +230,27 @@ export default function LightboxModal() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <span className="badge badge-gold">
-                {selectedPhoto.category.toUpperCase()}
+                {albums.find(a => a.id === selectedPhoto.category)?.label?.toUpperCase() || selectedPhoto.category.toUpperCase()}
               </span>
-              <button
-                className={`btn btn-sm ${selectedPhoto.isLiked ? 'btn-gold' : 'btn-secondary'}`}
-                onClick={() => toggleLikePhoto(selectedPhoto.id)}
-                style={{ padding: '6px 12px' }}
-              >
-                <Heart size={15} fill={selectedPhoto.isLiked ? '#000' : 'none'} />
-                <span>{selectedPhoto.likes}</span>
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => openUploadModal(selectedPhoto)}
+                  style={{ padding: '6px 10px', fontSize: '0.78rem', gap: '4px' }}
+                  title="Đổi album tác phẩm này"
+                >
+                  <Edit2 size={13} />
+                  <span>Đổi Album</span>
+                </button>
+                <button
+                  className={`btn btn-sm ${selectedPhoto.isLiked ? 'btn-gold' : 'btn-secondary'}`}
+                  onClick={() => toggleLikePhoto(selectedPhoto.id)}
+                  style={{ padding: '6px 12px' }}
+                >
+                  <Heart size={15} fill={selectedPhoto.isLiked ? '#000' : 'none'} />
+                  <span>{selectedPhoto.likes}</span>
+                </button>
+              </div>
             </div>
             <h2 className="font-serif" style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '8px' }}>
               {selectedPhoto.title}

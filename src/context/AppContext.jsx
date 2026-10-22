@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PHOTOGRAPHER_INFO, INITIAL_PHOTOS, INITIAL_COURSES, INITIAL_ORDERS, INITIAL_USERS } from '../data/initialData';
+import { PHOTOGRAPHER_INFO, INITIAL_PHOTOS, INITIAL_COURSES, INITIAL_ORDERS, INITIAL_USERS, INITIAL_ALBUMS } from '../data/initialData';
 import confetti from 'canvas-confetti';
 
 const AppContext = createContext(null);
@@ -35,7 +35,17 @@ export const AppProvider = ({ children }) => {
     }
   });
 
-  // 4. Photos Gallery List
+  // 4. Albums / Categories List
+  const [albums, setAlbums] = useState(() => {
+    try {
+      const saved = localStorage.getItem('minhvu_albums');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : INITIAL_ALBUMS;
+    } catch {
+      return INITIAL_ALBUMS;
+    }
+  });
+
+  // 5. Photos Gallery List
   const [photos, setPhotos] = useState(() => {
     try {
       const saved = localStorage.getItem('minhvu_photos');
@@ -45,7 +55,7 @@ export const AppProvider = ({ children }) => {
     }
   });
 
-  // 5. Orders List
+  // 6. Orders List
   const [orders, setOrders] = useState(() => {
     try {
       const saved = localStorage.getItem('minhvu_orders');
@@ -60,6 +70,11 @@ export const AppProvider = ({ children }) => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [selectedCourseForDetail, setSelectedCourseForDetail] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  // Upload Photo & Album Modals
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [editingPhoto, setEditingPhoto] = useState(null);
+  const [albumManagerOpen, setAlbumManagerOpen] = useState(false);
   
   // Payment & Auth Modals
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
@@ -82,6 +97,10 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('minhvu_courses', JSON.stringify(courses));
   }, [courses]);
+
+  useEffect(() => {
+    localStorage.setItem('minhvu_albums', JSON.stringify(albums));
+  }, [albums]);
 
   useEffect(() => {
     localStorage.setItem('minhvu_photos', JSON.stringify(photos));
@@ -284,6 +303,69 @@ export const AppProvider = ({ children }) => {
     showToast('Đã xóa ảnh khỏi Gallery', 'info');
   };
 
+  // Add / Create Album
+  const addAlbum = (albumName) => {
+    if (!albumName || !albumName.trim()) {
+      showToast('Vui lòng nhập tên album', 'error');
+      return null;
+    }
+    const trimmed = albumName.trim();
+    // Generate clean id
+    const baseSlug = trimmed
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || `album-${Date.now()}`;
+
+    // Ensure unique id
+    let uniqueId = baseSlug;
+    let counter = 1;
+    while (albums.some(a => a.id === uniqueId)) {
+      uniqueId = `${baseSlug}-${counter++}`;
+    }
+
+    const newAlbum = { id: uniqueId, label: trimmed };
+    setAlbums(prev => [...prev, newAlbum]);
+    showToast(`Đã tạo album mới: "${trimmed}"`, 'success');
+    return newAlbum;
+  };
+
+  // Rename Album
+  const renameAlbum = (albumId, newLabel) => {
+    if (!newLabel || !newLabel.trim()) return;
+    const trimmed = newLabel.trim();
+    setAlbums(prev => prev.map(a => a.id === albumId ? { ...a, label: trimmed } : a));
+    showToast(`Đã đổi tên album thành: "${trimmed}"`, 'success');
+  };
+
+  // Delete Album
+  const deleteAlbum = (albumId) => {
+    if (albums.length <= 1) {
+      showToast('Cần giữ lại ít nhất một album', 'warning');
+      return;
+    }
+    const fallbackCategory = albums.find(a => a.id !== albumId)?.id || 'general';
+    // Reassign photos in this album to fallback
+    setPhotos(prev => prev.map(p => p.category === albumId ? { ...p, category: fallbackCategory } : p));
+    setAlbums(prev => prev.filter(a => a.id !== albumId));
+    showToast('Đã xóa album và chuyển các ảnh liên quan sang album khác', 'info');
+  };
+
+  // Change Photo's Album
+  const changePhotoAlbum = (photoId, newAlbumId) => {
+    setPhotos(prev => prev.map(p => p.id === photoId ? { ...p, category: newAlbumId } : p));
+    const albumName = albums.find(a => a.id === newAlbumId)?.label || newAlbumId;
+    showToast(`Đã chuyển tác phẩm sang album "${albumName}"!`, 'success');
+  };
+
+  // Open Upload / Edit Photo Modal
+  const openUploadModal = (photo = null) => {
+    setEditingPhoto(photo);
+    setUploadModalOpen(true);
+  };
+
   // Admin: Grant Course directly to a student
   const grantCourseAccess = (phoneNumber, courseId) => {
     setUsers(prev => prev.map(u => {
@@ -316,6 +398,8 @@ export const AppProvider = ({ children }) => {
         setUsers,
         courses,
         setCourses,
+        albums,
+        setAlbums,
         photos,
         setPhotos,
         orders,
@@ -328,6 +412,17 @@ export const AppProvider = ({ children }) => {
         setSelectedCourseForDetail,
         selectedPhoto,
         setSelectedPhoto,
+        uploadModalOpen,
+        setUploadModalOpen,
+        editingPhoto,
+        setEditingPhoto,
+        albumManagerOpen,
+        setAlbumManagerOpen,
+        openUploadModal,
+        addAlbum,
+        renameAlbum,
+        deleteAlbum,
+        changePhotoAlbum,
         paymentModalOpen,
         setPaymentModalOpen,
         pendingOrder,

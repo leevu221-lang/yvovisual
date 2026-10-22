@@ -11,6 +11,7 @@ import UserProfile from './components/UserProfile';
 import AdminDashboard from './components/AdminDashboard';
 import AboutSection from './components/AboutSection';
 import LightboxModal from './components/LightboxModal';
+import UploadPhotoModal from './components/UploadPhotoModal';
 import Toast from './components/Toast';
 import Footer from './components/Footer';
 
@@ -34,6 +35,7 @@ export default function App() {
 
       {/* Interactive Global Modals */}
       <LightboxModal />
+      <UploadPhotoModal />
       <CourseDetailModal />
       <PaymentModal />
       <AuthModal />

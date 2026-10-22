@@ -31,6 +31,14 @@ export const PHOTOGRAPHER_INFO = {
   }
 };
 
+export const INITIAL_ALBUMS = [
+  { id: 'wedding', label: 'Cưới & Phóng Sự' },
+  { id: 'portrait', label: 'Chân Dung Nghệ Thuật' },
+  { id: 'landscape', label: 'Phong Cảnh' },
+  { id: 'commercial', label: 'Thời Trang & Editorial' },
+  { id: 'street', label: 'Đời Thường' }
+];
+
 export const INITIAL_PHOTOS = [
   {
     id: "p1",
