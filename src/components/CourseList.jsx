@@ -20,10 +20,10 @@ export default function CourseList() {
 
   const categories = [
     { id: 'all', label: 'Tất Cả Khóa Học' },
-    { id: 'portrait', label: 'Ánh Sáng & Chân Dung' },
-    { id: 'post-processing', label: 'Hậu Kỳ & Màu Sắc' },
+    { id: 'portrait', label: 'Chân Dung & Ánh Sáng' },
+    { id: 'post-processing', label: 'Hậu Kỳ Lightroom/Photoshop' },
     { id: 'wedding', label: 'Phóng Sự Cưới Pro' },
-    { id: 'basics', label: 'Căn Bản & Nhập Môn' }
+    { id: 'basics', label: 'Nhiếp Ảnh Nhập Môn' }
   ];
 
   const filteredCourses = courses.filter(course => {
@@ -40,59 +40,59 @@ export default function CourseList() {
 
   return (
     <div>
-      {/* Academy Hero Header */}
+      {/* Academy Minimalist Hero Header */}
       <section
         style={{
-          padding: '80px 0 60px',
-          background: 'linear-gradient(180deg, rgba(14, 17, 23, 0.9) 0%, rgba(7, 8, 10, 0.98) 100%)',
+          padding: '100px 0 70px',
+          background: 'linear-gradient(180deg, rgba(14, 17, 23, 0.9) 0%, rgba(8, 9, 11, 0.98) 100%)',
           borderBottom: '1px solid var(--border-subtle)',
           textAlign: 'center'
         }}
       >
         <div className="container">
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(212, 175, 55, 0.12)', border: '1px solid var(--border-gold)', borderRadius: 'var(--radius-full)', marginBottom: '18px' }}>
-            <Sparkles size={15} color="var(--gold-primary)" />
-            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--gold-light)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              ONLINE MASTERCLASS ACADEMY
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-full)', marginBottom: '20px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--gold-primary)' }} />
+            <span style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--gold-primary)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+              YVO ACADEMY • ONLINE MASTERCLASSES
             </span>
           </div>
 
-          <h1 className="font-serif" style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.5rem)', color: '#fff', marginBottom: '16px' }}>
-            Làm Chủ Ống Kính • Khai Phá <span className="gold-text">Tư Duy Thị Giác</span>
+          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', marginBottom: '18px', maxWidth: '900px', margin: '0 auto 18px' }}>
+            Làm Chủ Ống Kính &amp; <span className="font-serif" style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--gold-primary)' }}>Tư Duy Thị Giác</span>
           </h1>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '750px', margin: '0 auto 36px', lineHeight: 1.7 }}>
-            Giáo trình thực chiến 100% được đúc kết từ 14 năm chụp bìa tạp chí và thương mại. Học trực tuyến mọi lúc mọi nơi, cấp chứng chỉ và sở hữu trọn đời bộ Preset màu độc quyền.
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '680px', margin: '0 auto 36px', lineHeight: 1.7 }}>
+            Giáo trình thực chiến đúc kết từ 14 năm chụp bìa tạp chí và thương mại. Học trực tuyến mọi lúc mọi nơi, cấp chứng chỉ và sở hữu trọn đời bộ Preset màu độc quyền.
           </p>
 
-          {/* Value Props */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', color: 'var(--text-main)', fontSize: '0.9rem' }}>
+          {/* Minimalist Value Props */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '28px', flexWrap: 'wrap', color: 'var(--text-main)', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} color="var(--gold-primary)" />
-              <span>Video chất lượng 4K Ultra HD</span>
+              <CheckCircle2 size={15} color="var(--gold-primary)" />
+              <span>Video chất lượng 4K</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} color="var(--gold-primary)" />
-              <span>Tặng bộ Presets & File RAW độc quyền</span>
+              <CheckCircle2 size={15} color="var(--gold-primary)" />
+              <span>Tặng Presets &amp; File RAW độc quyền</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} color="var(--gold-primary)" />
-              <span>Hỗ trợ giải đáp 1-1 từ Nhiếp ảnh gia</span>
+              <CheckCircle2 size={15} color="var(--gold-primary)" />
+              <span>Hỗ trợ giải đáp 1-1 từ YVO VISUAL</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} color="var(--gold-primary)" />
-              <span>Kích hoạt học ngay qua VietQR 24/7</span>
+              <CheckCircle2 size={15} color="var(--gold-primary)" />
+              <span>Kích hoạt học ngay qua VietQR</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Course Catalog Section */}
-      <section style={{ padding: '60px 0 100px' }}>
+      <section style={{ padding: '70px 0 110px' }}>
         <div className="container">
           {/* Controls: Search & Category Chips */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '36px' }}>
-            <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '40px' }}>
+            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
               {categories.map(cat => (
                 <button
                   key={cat.id}
@@ -100,14 +100,14 @@ export default function CourseList() {
                   style={{
                     padding: '8px 18px',
                     borderRadius: 'var(--radius-full)',
-                    background: activeCategory === cat.id ? 'var(--gold-gradient)' : 'rgba(255,255,255,0.04)',
-                    color: activeCategory === cat.id ? '#000' : 'var(--text-muted)',
-                    fontWeight: activeCategory === cat.id ? 700 : 500,
-                    fontSize: '0.88rem',
-                    border: activeCategory === cat.id ? 'none' : '1px solid var(--border-glass)',
+                    background: activeCategory === cat.id ? '#ffffff' : 'rgba(255, 255, 255, 0.035)',
+                    color: activeCategory === cat.id ? '#08090b' : 'var(--text-muted)',
+                    fontWeight: activeCategory === cat.id ? 600 : 400,
+                    fontSize: '0.85rem',
+                    border: activeCategory === cat.id ? '1px solid #ffffff' : '1px solid var(--border-glass)',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
                   {cat.label}
@@ -117,16 +117,16 @@ export default function CourseList() {
 
             <div style={{ position: 'relative', width: '280px', maxWidth: '100%' }}>
               <Search
-                size={16}
-                style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
+                size={15}
+                style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
               />
               <input
                 type="text"
-                placeholder="Tìm khóa học..."
+                placeholder="Tìm tên khóa học..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="form-input"
-                style={{ paddingLeft: '36px', fontSize: '0.88rem' }}
+                style={{ paddingLeft: '40px', borderRadius: 'var(--radius-full)', fontSize: '0.86rem' }}
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function CourseList() {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-              gap: '32px'
+              gap: '28px'
             }}
           >
             {filteredCourses.map(course => {
@@ -150,7 +150,8 @@ export default function CourseList() {
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    borderRadius: 'var(--radius-lg)'
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-glass)'
                   }}
                 >
                   {/* Thumbnail Cover */}
@@ -159,7 +160,7 @@ export default function CourseList() {
                       position: 'relative',
                       height: '220px',
                       overflow: 'hidden',
-                      backgroundColor: '#151922'
+                      backgroundColor: '#12151b'
                     }}
                   >
                     <img
@@ -170,14 +171,27 @@ export default function CourseList() {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        transition: 'transform 0.4s ease'
+                        transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
                       }}
                     />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,17,23,0.9) 0%, transparent 60%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,9,11,0.92) 0%, transparent 60%)' }} />
 
                     {/* Badge */}
                     <div style={{ position: 'absolute', top: '14px', left: '14px', display: 'flex', gap: '6px' }}>
-                      <span className="badge badge-gold" style={{ backdropFilter: 'blur(8px)', background: 'rgba(7, 8, 10, 0.8)' }}>
+                      <span
+                        style={{
+                          backdropFilter: 'blur(10px)',
+                          background: 'rgba(8, 9, 11, 0.75)',
+                          border: '1px solid var(--border-glass)',
+                          color: '#fff',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          padding: '3px 10px',
+                          borderRadius: 'var(--radius-full)'
+                        }}
+                      >
                         {course.badge}
                       </span>
                     </div>
@@ -190,7 +204,7 @@ export default function CourseList() {
                       </div>
                     )}
 
-                    <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', color: 'var(--gold-light)' }}>
+                    <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
                       <span>{course.level}</span>
                       <span>{course.duration}</span>
                     </div>
@@ -198,9 +212,9 @@ export default function CourseList() {
 
                   {/* Course Content */}
                   <div style={{ padding: '22px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '0.85rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', fontSize: '0.82rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--gold-primary)' }}>
-                        <Star size={15} fill="var(--gold-primary)" />
+                        <Star size={14} fill="var(--gold-primary)" />
                         <strong>{course.rating}</strong>
                       </div>
                       <span style={{ color: 'var(--text-dim)' }}>•</span>
@@ -208,13 +222,14 @@ export default function CourseList() {
                     </div>
 
                     <h3
-                      className="font-serif"
                       style={{
-                        fontSize: '1.25rem',
+                        fontSize: '1.2rem',
+                        fontWeight: 600,
                         color: '#fff',
-                        marginBottom: '10px',
+                        marginBottom: '8px',
                         lineHeight: 1.35,
-                        minHeight: '52px'
+                        letterSpacing: '-0.01em',
+                        minHeight: '48px'
                       }}
                     >
                       {course.title}
@@ -223,9 +238,9 @@ export default function CourseList() {
                     <p
                       style={{
                         color: 'var(--text-muted)',
-                        fontSize: '0.88rem',
+                        fontSize: '0.86rem',
                         lineHeight: 1.6,
-                        marginBottom: '18px',
+                        marginBottom: '20px',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -239,13 +254,13 @@ export default function CourseList() {
                     <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border-subtle)' }}>
                       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '14px' }}>
                         <div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Học phí ưu đãi:</div>
-                          <div className="font-serif gold-text" style={{ fontSize: '1.4rem', fontWeight: 800 }}>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Học phí:</div>
+                          <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em' }}>
                             {formatPrice(course.salePrice)}
                           </div>
                         </div>
                         {course.originalPrice && (
-                          <div style={{ textDecoration: 'line-through', color: 'var(--text-dim)', fontSize: '0.9rem' }}>
+                          <div style={{ textDecoration: 'line-through', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
                             {formatPrice(course.originalPrice)}
                           </div>
                         )}
@@ -254,30 +269,30 @@ export default function CourseList() {
                       <div style={{ display: 'grid', gridTemplateColumns: isEnrolled ? '1fr' : '1fr 1fr', gap: '8px' }}>
                         {isEnrolled ? (
                           <button
-                            className="btn btn-gold"
+                            className="btn btn-primary"
                             onClick={() => {
                               setSelectedCourseId(course.id);
                               setCurrentView('classroom');
                             }}
                           >
-                            <Play size={16} />
-                            <span>Tiếp Tục Học Ngay</span>
+                            <Play size={15} />
+                            <span>Vào Học Ngay</span>
                           </button>
                         ) : (
                           <>
                             <button
                               className="btn btn-secondary btn-sm"
                               onClick={() => setSelectedCourseForDetail(course)}
-                              title="Xem chi tiết và học thử"
+                              title="Xem chi tiết giáo trình"
                             >
-                              <span>Chi Tiết</span>
+                              <span>Giáo Trình</span>
                             </button>
                             <button
-                              className="btn btn-gold btn-sm"
+                              className="btn btn-primary btn-sm"
                               onClick={() => initiateCoursePurchase(course)}
-                              title="Đăng ký mua khóa học"
+                              title="Đăng ký khóa học"
                             >
-                              <span>Đăng Ký Học</span>
+                              <span>Đăng Ký</span>
                             </button>
                           </>
                         )}

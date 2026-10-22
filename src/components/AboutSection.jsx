@@ -17,24 +17,24 @@ export default function AboutSection() {
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
-    showToast(`Cảm ơn bạn ${bookingForm.name}! Y VÕ Visual sẽ liên hệ tư vấn lịch chụp trong 24 giờ.`, 'success');
+    showToast(`Cảm ơn bạn ${bookingForm.name}! YVO VISUAL sẽ liên hệ tư vấn lịch chụp trong 24 giờ.`, 'success');
     setBookingForm({ name: '', phone: '', serviceType: 'wedding', date: '', message: '' });
   };
 
   return (
-    <div style={{ padding: '60px 0 100px' }}>
+    <div style={{ padding: '80px 0 120px' }}>
       <div className="container">
-        {/* Top Hero Bio */}
-        <div className="glass-panel" style={{ padding: '48px', marginBottom: '48px', overflow: 'hidden' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 420px) 1fr', gap: '48px', alignItems: 'center' }}>
+        {/* Top Hero Bio - Editorial Split */}
+        <div className="glass-panel" style={{ padding: '52px', marginBottom: '48px', overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 400px) 1fr', gap: '56px', alignItems: 'center' }}>
             {/* Portrait Image */}
             <div style={{ position: 'relative' }}>
               <div
                 style={{
-                  borderRadius: 'var(--radius-lg)',
+                  borderRadius: 'var(--radius-md)',
                   overflow: 'hidden',
-                  boxShadow: 'var(--shadow-lg), 0 0 30px rgba(212, 175, 55, 0.2)',
-                  border: '1px solid var(--border-gold)'
+                  boxShadow: 'var(--shadow-lg)',
+                  border: '1px solid var(--border-glass)'
                 }}
               >
                 <img
@@ -48,76 +48,76 @@ export default function AboutSection() {
               <div
                 style={{
                   position: 'absolute',
-                  bottom: '-16px',
-                  right: '-16px',
+                  bottom: '-14px',
+                  right: '-14px',
                   background: 'var(--bg-card)',
-                  border: '1px solid var(--border-gold)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '12px 18px',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '10px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
                   boxShadow: 'var(--shadow-sm)'
                 }}
               >
-                <Award size={24} color="var(--gold-primary)" />
+                <Award size={20} color="var(--gold-primary)" />
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>DANH HIỆU</div>
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--gold-light)' }}>Sony Artisan of Imagery</strong>
+                  <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>AMBASSADOR</div>
+                  <strong style={{ fontSize: '0.82rem', color: '#fff' }}>Sony Artisan &amp; Leica</strong>
                 </div>
               </div>
             </div>
 
             {/* Bio Content */}
             <div>
-              <span className="badge badge-gold" style={{ marginBottom: '12px' }}>
-                MASTER VISUAL STORYTELLER
-              </span>
-              <h1 className="font-serif" style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', color: '#fff', marginBottom: '8px', lineHeight: 1.2 }}>
+              <div style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--gold-primary)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '10px' }}>
+                VISUAL ARTIST &amp; FOUNDER
+              </div>
+              <h1 style={{ fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', marginBottom: '6px', lineHeight: 1.15 }}>
                 {photographerInfo.fullName}
               </h1>
-              <div style={{ fontSize: '1.05rem', color: 'var(--gold-light)', marginBottom: '20px' }}>
+              <div style={{ fontSize: '1rem', color: 'var(--text-dim)', marginBottom: '22px' }}>
                 {photographerInfo.title}
               </div>
 
               <blockquote
                 style={{
-                  borderLeft: '3px solid var(--gold-primary)',
+                  borderLeft: '2px solid var(--gold-primary)',
                   paddingLeft: '18px',
                   fontStyle: 'italic',
                   color: 'var(--text-main)',
-                  fontSize: '1.05rem',
+                  fontSize: '1.02rem',
                   lineHeight: 1.7,
                   marginBottom: '24px',
-                  background: 'rgba(212, 175, 55, 0.04)',
-                  padding: '16px',
-                  borderRadius: '0 var(--radius-md) var(--radius-md) 0'
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  padding: '16px 20px',
+                  borderRadius: '0 var(--radius-sm) var(--radius-sm) 0'
                 }}
               >
                 "{photographerInfo.quote}"
               </blockquote>
 
-              <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.95rem', marginBottom: '24px' }}>
+              <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '0.94rem', marginBottom: '28px' }}>
                 {photographerInfo.bio}
               </p>
 
               {/* Highlights */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', fontSize: '0.9rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', fontSize: '0.86rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-                  <CheckCircle2 size={16} color="var(--gold-primary)" />
+                  <CheckCircle2 size={15} color="var(--gold-primary)" />
                   <span>Vogue Italia Featured Artist</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-                  <CheckCircle2 size={16} color="var(--gold-primary)" />
+                  <CheckCircle2 size={15} color="var(--gold-primary)" />
                   <span>Leica M Ambassador Vietnam</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-                  <CheckCircle2 size={16} color="var(--gold-primary)" />
+                  <CheckCircle2 size={15} color="var(--gold-primary)" />
                   <span>Giám khảo Nhiếp Ảnh Trẻ 2025</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-                  <CheckCircle2 size={16} color="var(--gold-primary)" />
-                  <span>14+ Năm cống hiến nghệ thuật</span>
+                  <CheckCircle2 size={15} color="var(--gold-primary)" />
+                  <span>14+ Năm cống hiến thị giác</span>
                 </div>
               </div>
             </div>
@@ -127,19 +127,19 @@ export default function AboutSection() {
         {/* Gear Bag & Booking Form Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '32px' }}>
           {/* Gear Bag (Thiết Bị Sử Dụng) */}
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-              <Camera size={22} color="var(--gold-primary)" />
-              <h3 className="font-serif" style={{ fontSize: '1.3rem', color: '#fff', margin: 0 }}>
+          <div className="glass-panel" style={{ padding: '36px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <Camera size={20} color="var(--gold-primary)" />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#fff', margin: 0, letterSpacing: '-0.01em' }}>
                 Thiết Bị Tiêu Chuẩn (My Gear Bag)
               </h3>
             </div>
 
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '20px', lineHeight: 1.6 }}>
-              Chất lượng hình ảnh vượt trội bắt nguồn từ sự kết hợp hoàn hảo giữa độ phân giải cực cao, dải màu trung thực và hệ thống ánh sáng chủ động.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '22px', lineHeight: 1.6 }}>
+              Chất lượng hình ảnh bắt nguồn từ sự kết hợp giữa độ phân giải cao, dải màu trung thực và hệ thống ánh sáng chủ động.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {photographerInfo.gearList.map((item, idx) => (
                 <div
                   key={idx}
@@ -148,40 +148,40 @@ export default function AboutSection() {
                     alignItems: 'center',
                     gap: '12px',
                     padding: '12px 16px',
-                    background: 'rgba(255,255,255,0.03)',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border-subtle)',
-                    fontSize: '0.9rem',
+                    background: 'rgba(255, 255, 255, 0.025)',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-glass)',
+                    fontSize: '0.88rem',
                     color: '#fff'
                   }}
                 >
-                  <span className="gold-text" style={{ fontWeight: 700 }}>0{idx + 1}.</span>
+                  <span style={{ fontWeight: 600, color: 'var(--gold-primary)', fontSize: '0.8rem' }}>0{idx + 1}.</span>
                   <span>{item}</span>
                 </div>
               ))}
             </div>
 
-            <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.84rem', color: 'var(--text-muted)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <MapPin size={15} color="var(--gold-primary)" />
                 <span>Studio: 18 Đặng Thai Mai, P. Quảng An, Q. Tây Hồ, Hà Nội</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Phone size={15} color="var(--gold-primary)" />
-                <span>Hotline: 0988 888 888 • Giờ làm việc: 08:30 - 20:30 hàng ngày</span>
+                <span>Hotline: 0988 888 888 • 08:30 - 20:30 hàng ngày</span>
               </div>
             </div>
           </div>
 
           {/* Booking & Consultation Form */}
-          <div className="glass-panel" style={{ padding: '32px' }}>
+          <div className="glass-panel" style={{ padding: '36px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-              <Sparkles size={22} color="var(--gold-primary)" />
-              <h3 className="font-serif" style={{ fontSize: '1.3rem', color: '#fff', margin: 0 }}>
-                Đặt Lịch Chụp & Hợp Tác Thương Mại
+              <Sparkles size={20} color="var(--gold-primary)" />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#fff', margin: 0, letterSpacing: '-0.01em' }}>
+                Đặt Lịch Chụp &amp; Hợp Tác
               </h3>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '20px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginBottom: '22px' }}>
               Dành cho khách hàng cần chụp ảnh cưới nghệ thuật, lookbook thời trang hoặc dự án thương mại cao cấp.
             </p>
 
@@ -220,7 +220,7 @@ export default function AboutSection() {
                   >
                     <option value="wedding">Phóng Sự Cưới Trọn Gói</option>
                     <option value="portrait">Chân Dung Nghệ Thuật</option>
-                    <option value="commercial">Thương Mại & Bìa Tạp Chí</option>
+                    <option value="commercial">Thương Mại &amp; Bìa Tạp Chí</option>
                     <option value="destination">Pre-Wedding Ngoại Cảnh</option>
                   </select>
                 </div>
@@ -247,9 +247,9 @@ export default function AboutSection() {
                 />
               </div>
 
-              <button type="submit" className="btn btn-gold" style={{ width: '100%' }}>
-                <Send size={16} />
-                <span>Gửi Yêu Cầu Tư Vấn Ngay</span>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                <Send size={15} />
+                <span>Gửi Yêu Cầu Tư Vấn</span>
               </button>
             </form>
           </div>

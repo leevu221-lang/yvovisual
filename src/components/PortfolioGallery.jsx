@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
-  Camera, Heart, MapPin, Eye, SlidersHorizontal, Sparkles, 
-  ArrowRight, Award, Flame, Search
+  Camera, Heart, MapPin, Eye, ArrowRight, Search, 
+  Sparkles, Compass, Sliders
 } from 'lucide-react';
 
 export default function PortfolioGallery() {
@@ -11,15 +11,15 @@ export default function PortfolioGallery() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { id: 'all', label: 'Tất Cả Tác Phẩm' },
+    { id: 'all', label: 'Tất Cả' },
     { id: 'wedding', label: 'Cưới & Phóng Sự' },
     { id: 'portrait', label: 'Chân Dung Nghệ Thuật' },
-    { id: 'landscape', label: 'Phong Cảnh & Du Ký' },
-    { id: 'commercial', label: 'Thương Mại & Thời Trang' },
-    { id: 'street', label: 'Đường Phố & Đời Thường' }
+    { id: 'landscape', label: 'Phong Cảnh' },
+    { id: 'commercial', label: 'Thời Trang & Editorial' },
+    { id: 'street', label: 'Đời Thường' }
   ];
 
-  // Filtering
+  // Filtering logic
   const filteredPhotos = photos.filter(photo => {
     const matchesCategory = selectedCategory === 'all' || photo.category === selectedCategory;
     const matchesSearch = 
@@ -32,91 +32,94 @@ export default function PortfolioGallery() {
 
   return (
     <div>
-      {/* Editorial Hero Banner */}
+      {/* Modern Minimalist Hero Banner */}
       <section
         style={{
           position: 'relative',
-          padding: '100px 0 80px',
-          background: `linear-gradient(to bottom, rgba(7, 8, 10, 0.65), rgba(7, 8, 10, 0.95)), url('${photographerInfo.heroBg}') center/cover no-repeat`,
+          padding: '120px 0 90px',
+          background: `linear-gradient(to bottom, rgba(8, 9, 11, 0.72) 0%, rgba(8, 9, 11, 0.96) 100%), url('${photographerInfo.heroBg}') center/cover no-repeat`,
           borderBottom: '1px solid var(--border-subtle)',
           overflow: 'hidden'
         }}
       >
         <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(212, 175, 55, 0.12)', border: '1px solid var(--border-gold)', borderRadius: 'var(--radius-full)', marginBottom: '20px' }}>
-            <Award size={15} color="var(--gold-primary)" />
-            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--gold-light)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              {photographerInfo.subtitle}
+          {/* Subtle Editorial Kicker */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-full)', marginBottom: '24px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--gold-primary)' }} />
+            <span style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--gold-primary)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              YVO VISUAL ARCHIVE 2026
             </span>
           </div>
 
+          {/* Main Title */}
           <h1
-            className="font-serif"
             style={{
-              fontSize: 'clamp(2.4rem, 5vw, 4rem)',
-              fontWeight: 800,
+              fontSize: 'clamp(2.4rem, 5.5vw, 4.2rem)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
               lineHeight: 1.15,
-              maxWidth: '960px',
-              margin: '0 auto 20px',
+              maxWidth: '940px',
+              margin: '0 auto 22px',
               color: '#ffffff'
             }}
           >
-            Nơi Ánh Sáng Chạm Vào <span className="gold-text">Cảm Xúc</span> Vượt Thời Gian
+            Kể Chuyện Bằng Ánh Sáng &amp; <span className="font-serif" style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--gold-primary)' }}>Cảm Xúc</span> Thuần Khiết
           </h1>
 
           <p
             style={{
-              fontSize: '1.15rem',
+              fontSize: '1.05rem',
               color: 'var(--text-muted)',
-              maxWidth: '720px',
+              maxWidth: '680px',
               margin: '0 auto 36px',
-              lineHeight: 1.7
+              lineHeight: 1.7,
+              fontWeight: 400
             }}
           >
-            Bộ sưu tập các kiệt tác nhiếp ảnh phóng sự cưới, chân dung editorial và cảnh quan hùng vĩ được ghi lại qua ống kính của nghệ sĩ thị giác Y VÕ Visual.
+            Bộ sưu tập các tác phẩm nhiếp ảnh nghệ thuật, phóng sự cưới và chân dung editorial được kiến tạo bởi nghệ sĩ thị giác YVO VISUAL.
           </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
             <button
-              className="btn btn-gold btn-lg"
+              className="btn btn-primary btn-lg"
               onClick={() => {
                 const el = document.getElementById('gallery-section');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <Eye size={18} />
-              Khám Phá Gallery 4K
+              <Eye size={17} />
+              Khám Phá Gallery
             </button>
             <button
               className="btn btn-secondary btn-lg"
               onClick={() => setCurrentView('courses')}
             >
-              <span>Học Viện Nhiếp Ảnh Trực Tuyến</span>
-              <ArrowRight size={18} />
+              <span>Học Viện Đào Tạo</span>
+              <ArrowRight size={17} />
             </button>
           </div>
 
-          {/* Quick Stats Bar */}
+          {/* Minimalist Metrics Strip */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '20px',
-              maxWidth: '900px',
-              margin: '60px auto 0',
-              padding: '24px',
-              background: 'rgba(14, 17, 23, 0.8)',
-              backdropFilter: 'blur(16px)',
+              gap: '24px',
+              maxWidth: '920px',
+              margin: '64px auto 0',
+              padding: '24px 32px',
+              background: 'rgba(14, 17, 23, 0.7)',
+              backdropFilter: 'blur(20px)',
               border: '1px solid var(--border-glass)',
               borderRadius: 'var(--radius-lg)'
             }}
           >
             {photographerInfo.stats.map((stat, idx) => (
               <div key={idx} style={{ textAlign: 'center' }}>
-                <div className="font-serif gold-text" style={{ fontSize: '1.9rem', fontWeight: 800 }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em' }}>
                   {stat.value}
                 </div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginTop: '4px' }}>
                   {stat.label}
                 </div>
               </div>
@@ -126,54 +129,54 @@ export default function PortfolioGallery() {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery-section" style={{ padding: '70px 0 100px' }}>
+      <section id="gallery-section" style={{ padding: '80px 0 120px' }}>
         <div className="container">
           {/* Header & Filter Controls */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '40px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', marginBottom: '44px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px' }}>
               <div>
-                <span className="badge badge-gold" style={{ marginBottom: '8px' }}>
-                  TRIỂN LÃM HÌNH ẢNH NGHỆ THUẬT
-                </span>
-                <h2 className="font-serif" style={{ fontSize: '2.2rem', color: '#fff' }}>
-                  Tuyển Tập Tác Phẩm Chọn Lọc
+                <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gold-primary)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '6px' }}>
+                  SELECTED WORKS
+                </div>
+                <h2 style={{ fontSize: '2.1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', margin: 0 }}>
+                  Tuyển Tập Tác Phẩm
                 </h2>
               </div>
 
-              {/* Search Box */}
+              {/* Minimal Search Box */}
               <div style={{ position: 'relative', width: '320px', maxWidth: '100%' }}>
                 <Search
-                  size={18}
-                  style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
+                  size={16}
+                  style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }}
                 />
                 <input
                   type="text"
-                  placeholder="Tìm theo địa điểm, camera, lens..."
+                  placeholder="Tìm theo chủ đề, địa điểm, camera..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="form-input"
-                  style={{ paddingLeft: '40px', fontSize: '0.88rem' }}
+                  style={{ paddingLeft: '44px', borderRadius: 'var(--radius-full)', fontSize: '0.86rem' }}
                 />
               </div>
             </div>
 
-            {/* Category Filter Chips */}
-            <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '8px' }}>
+            {/* Minimalist Category Filter Pills */}
+            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
               {categories.map(cat => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   style={{
-                    padding: '8px 18px',
+                    padding: '8px 20px',
                     borderRadius: 'var(--radius-full)',
-                    background: selectedCategory === cat.id ? 'var(--gold-gradient)' : 'rgba(255,255,255,0.04)',
-                    color: selectedCategory === cat.id ? '#000' : 'var(--text-muted)',
-                    fontWeight: selectedCategory === cat.id ? 700 : 500,
-                    fontSize: '0.9rem',
-                    border: selectedCategory === cat.id ? 'none' : '1px solid var(--border-glass)',
+                    background: selectedCategory === cat.id ? '#ffffff' : 'rgba(255, 255, 255, 0.035)',
+                    color: selectedCategory === cat.id ? '#08090b' : 'var(--text-muted)',
+                    fontWeight: selectedCategory === cat.id ? 600 : 400,
+                    fontSize: '0.85rem',
+                    border: selectedCategory === cat.id ? '1px solid #ffffff' : '1px solid var(--border-glass)',
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
                   {cat.label}
@@ -184,14 +187,14 @@ export default function PortfolioGallery() {
 
           {/* Photos Grid */}
           {filteredPhotos.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--border-subtle)' }}>
-              <Camera size={48} color="var(--text-dim)" style={{ marginBottom: '16px' }} />
-              <h3 style={{ color: '#fff', marginBottom: '8px' }}>Không tìm thấy tác phẩm phù hợp</h3>
-              <p style={{ color: 'var(--text-muted)' }}>Vui lòng thử chọn danh mục khác hoặc xóa bộ lọc tìm kiếm.</p>
+            <div style={{ textAlign: 'center', padding: '90px 20px', background: 'rgba(255, 255, 255, 0.015)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--border-subtle)' }}>
+              <Camera size={44} color="var(--text-dim)" style={{ marginBottom: '16px' }} />
+              <h3 style={{ color: '#fff', marginBottom: '8px', fontWeight: 600 }}>Không tìm thấy tác phẩm phù hợp</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>Thử chọn danh mục khác hoặc xóa từ khóa tìm kiếm.</p>
               <button
                 className="btn btn-secondary btn-sm"
                 onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
-                style={{ marginTop: '16px' }}
+                style={{ marginTop: '18px' }}
               >
                 Đặt lại bộ lọc
               </button>
@@ -201,19 +204,13 @@ export default function PortfolioGallery() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
-                gap: '28px'
+                gap: '24px'
               }}
             >
               {filteredPhotos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="glass-card"
-                  style={{
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    group: 'photo-card'
-                  }}
+                  className="photo-card"
                   onClick={() => setSelectedPhoto(photo)}
                 >
                   {/* Photo Container */}
@@ -221,33 +218,34 @@ export default function PortfolioGallery() {
                     style={{
                       position: 'relative',
                       width: '100%',
-                      height: photo.aspectRatio === 'landscape' ? '280px' : photo.aspectRatio === 'square' ? '340px' : '440px',
+                      height: photo.aspectRatio === 'landscape' ? '300px' : photo.aspectRatio === 'square' ? '360px' : '460px',
                       overflow: 'hidden',
-                      backgroundColor: '#12151b'
+                      backgroundColor: '#101217'
                     }}
                   >
                     <img
                       src={photo.image}
                       alt={photo.title}
                       loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.06)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
                     />
 
                     {/* Top Badges */}
-                    <div style={{ position: 'absolute', top: '14px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
-                      <span className="badge badge-gold" style={{ backdropFilter: 'blur(8px)', background: 'rgba(7, 8, 10, 0.75)' }}>
-                        {photo.category.toUpperCase()}
+                    <div style={{ position: 'absolute', top: '16px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
+                      <span
+                        style={{
+                          backdropFilter: 'blur(12px)',
+                          background: 'rgba(8, 9, 11, 0.75)',
+                          border: '1px solid var(--border-glass)',
+                          color: '#fff',
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          padding: '4px 12px',
+                          borderRadius: 'var(--radius-full)'
+                        }}
+                      >
+                        {photo.category}
                       </span>
 
                       <button
@@ -256,72 +254,59 @@ export default function PortfolioGallery() {
                           toggleLikePhoto(photo.id);
                         }}
                         style={{
-                          background: 'rgba(7, 8, 10, 0.75)',
-                          backdropFilter: 'blur(8px)',
+                          background: 'rgba(8, 9, 11, 0.75)',
+                          backdropFilter: 'blur(12px)',
                           border: '1px solid var(--border-glass)',
                           borderRadius: 'var(--radius-full)',
-                          padding: '6px 12px',
+                          padding: '5px 12px',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '6px',
                           color: photo.isLiked ? '#f43f5e' : '#fff',
                           cursor: 'pointer',
-                          fontSize: '0.8rem',
+                          fontSize: '0.78rem',
                           fontWeight: 600,
                           transition: 'all 0.2s'
                         }}
-                        title="Thả tim"
+                        title="Thả tim tác phẩm"
                       >
-                        <Heart size={14} fill={photo.isLiked ? '#f43f5e' : 'none'} />
+                        <Heart size={13} fill={photo.isLiked ? '#f43f5e' : 'none'} />
                         <span>{photo.likes}</span>
                       </button>
                     </div>
 
-                    {/* Gradient Overlay & Metadata on Bottom */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to top, rgba(7, 8, 10, 0.95) 0%, rgba(7, 8, 10, 0.3) 50%, transparent 100%)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-end',
-                        padding: '20px',
-                        zIndex: 1
-                      }}
-                    >
+                    {/* Minimalist Bottom Overlay */}
+                    <div className="photo-overlay">
                       <h3
-                        className="font-serif"
                         style={{
                           fontSize: '1.25rem',
-                          color: '#fff',
+                          fontWeight: 600,
+                          color: '#ffffff',
                           marginBottom: '6px',
-                          textShadow: '0 2px 8px rgba(0,0,0,0.8)'
+                          letterSpacing: '-0.01em'
                         }}
                       >
                         {photo.title}
                       </h3>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: '12px' }}>
                         <MapPin size={13} color="var(--gold-primary)" />
                         <span>{photo.location}</span>
                       </div>
 
-                      {/* EXIF Tech pill */}
+                      {/* Minimalist Camera Specs */}
                       <div
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '10px',
-                          padding: '6px 12px',
-                          background: 'rgba(255, 255, 255, 0.08)',
-                          backdropFilter: 'blur(10px)',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: '0.78rem',
-                          color: 'var(--gold-light)'
+                          gap: '8px',
+                          fontSize: '0.75rem',
+                          color: 'var(--text-dim)',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                          paddingTop: '10px'
                         }}
                       >
-                        <Camera size={13} />
+                        <Camera size={13} color="var(--gold-primary)" />
                         <span>{photo.camera} • {photo.settings.aperture} • {photo.settings.shutter}</span>
                       </div>
                     </div>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Camera, BookOpen, Image, User, Shield, LogOut, Sparkles, CheckCircle2, ChevronRight, Phone } from 'lucide-react';
+import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function Navbar() {
   const {
@@ -10,56 +10,28 @@ export default function Navbar() {
     setCurrentView,
     switchRole,
     setAuthModalOpen,
-    setAuthMode,
-    photographerInfo
+    setAuthMode
   } = useApp();
+
+  const [roleDockOpen, setRoleDockOpen] = useState(true);
 
   return (
     <>
-      {/* Quick Demo Switcher Top Bar */}
-      <div className="role-switcher-banner">
-        <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Sparkles size={14} color="var(--gold-primary)" />
-          <strong>Chế độ trải nghiệm nhanh:</strong>
-        </span>
-        <button
-          className={`role-chip ${!currentUser ? 'active' : ''}`}
-          onClick={() => switchRole('guest')}
-          title="Xem trang với tư cách khách chưa đăng nhập"
-        >
-          Khách vãng lai
-        </button>
-        <button
-          className={`role-chip ${currentUser?.role === 'student' ? 'active' : ''}`}
-          onClick={() => switchRole('student')}
-          title="Xem trang với tư cách học viên đã sở hữu khóa học"
-        >
-          🎓 Học viên: Đỗ Hoàng Long
-        </button>
-        <button
-          className={`role-chip ${currentUser?.role === 'admin' ? 'active' : ''}`}
-          onClick={() => switchRole('admin')}
-          title="Xem quyền Quản trị viên (Thêm/Sửa ảnh, khóa học, duyệt đơn)"
-        >
-          👑 Quản trị viên: Y Võ Visual
-        </button>
-      </div>
-
-      {/* Main Navigation Bar */}
+      {/* Modern Minimalist Navigation Bar */}
       <header className="header-nav">
         <div className="container nav-container">
           {/* Brand Logo */}
           <div
             className="brand-logo"
             onClick={() => setCurrentView('portfolio')}
-            title="Trang chủ Y Võ Visual"
+            title="Trang chủ YVO VISUAL"
           >
             <div className="brand-mark">
-              <Camera size={22} />
+              <Aperture size={20} strokeWidth={1.8} />
             </div>
             <div>
-              <div className="brand-name font-serif">Y VÕ VISUAL</div>
-              <div className="brand-sub">STUDIO & ACADEMY</div>
+              <div className="brand-name">YVO VISUAL</div>
+              <div className="brand-sub">STUDIO & ARCHIVE</div>
             </div>
           </div>
 
@@ -71,8 +43,8 @@ export default function Navbar() {
                   className={`nav-item-btn ${currentView === 'portfolio' ? 'active' : ''}`}
                   onClick={() => setCurrentView('portfolio')}
                 >
-                  <Image size={18} />
-                  Triển Lãm Portfolio
+                  <Image size={16} strokeWidth={1.8} />
+                  Triển Lãm
                 </button>
               </li>
               <li>
@@ -80,8 +52,8 @@ export default function Navbar() {
                   className={`nav-item-btn ${currentView === 'courses' ? 'active' : ''}`}
                   onClick={() => setCurrentView('courses')}
                 >
-                  <BookOpen size={18} />
-                  Khóa Học Trực Tuyến
+                  <BookOpen size={16} strokeWidth={1.8} />
+                  Khóa Học
                 </button>
               </li>
               <li>
@@ -89,8 +61,8 @@ export default function Navbar() {
                   className={`nav-item-btn ${currentView === 'about' ? 'active' : ''}`}
                   onClick={() => setCurrentView('about')}
                 >
-                  <User size={18} />
-                  Nhiếp Ảnh Gia
+                  <User size={16} strokeWidth={1.8} />
+                  Tiểu Sử
                 </button>
               </li>
 
@@ -100,9 +72,9 @@ export default function Navbar() {
                     className={`nav-item-btn ${currentView === 'profile' ? 'active' : ''}`}
                     onClick={() => setCurrentView('profile')}
                   >
-                    <span>Khóa Học Của Tôi</span>
+                    <span>Lớp Của Tôi</span>
                     {currentUser.enrolledCourses?.length > 0 && (
-                      <span className="badge badge-gold" style={{ padding: '2px 7px', fontSize: '0.7rem' }}>
+                      <span className="badge badge-gold" style={{ padding: '2px 7px', fontSize: '0.68rem' }}>
                         {currentUser.enrolledCourses.length}
                       </span>
                     )}
@@ -115,10 +87,10 @@ export default function Navbar() {
                   <button
                     className={`nav-item-btn ${currentView === 'admin' ? 'active' : ''}`}
                     onClick={() => setCurrentView('admin')}
-                    style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-light)' }}
+                    style={{ border: '1px solid rgba(223, 203, 181, 0.4)', color: 'var(--gold-primary)' }}
                   >
-                    <Shield size={18} />
-                    Trang Quản Trị
+                    <Shield size={16} strokeWidth={1.8} />
+                    Quản Trị
                   </button>
                 </li>
               )}
@@ -128,42 +100,43 @@ export default function Navbar() {
           {/* User Account / Auth Actions */}
           <div className="nav-actions">
             {currentUser ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div
                   onClick={() => setCurrentView('profile')}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    padding: '6px 14px',
+                    padding: '5px 14px 5px 6px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255,255,255,0.06)',
+                    background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid var(--border-glass)',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
                   }}
-                  title="Xem trang cá nhân & khóa học đã mua"
+                  title="Xem trang cá nhân & khóa học đã sở hữu"
                 >
                   <div
                     style={{
-                      width: '32px',
-                      height: '32px',
+                      width: '28px',
+                      height: '28px',
                       borderRadius: '50%',
-                      background: 'var(--gold-gradient)',
+                      background: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem'
+                      color: '#08090b',
+                      fontWeight: 700,
+                      fontSize: '0.8rem'
                     }}
                   >
-                    {currentUser.fullName ? currentUser.fullName.charAt(0) : 'U'}
+                    {currentUser.fullName ? currentUser.fullName.charAt(0) : 'Y'}
                   </div>
                   <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff' }}>
                       {currentUser.fullName.split(' ').slice(-2).join(' ')}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--gold-light)' }}>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
                       {currentUser.role === 'admin' ? 'Quản Trị Viên' : 'Học Viên'}
                     </div>
                   </div>
@@ -171,13 +144,11 @@ export default function Navbar() {
 
                 <button
                   className="btn btn-secondary btn-sm"
-                  onClick={() => {
-                    setCurrentUser(null);
-                  }}
+                  onClick={() => setCurrentUser(null)}
                   title="Đăng xuất"
-                  style={{ padding: '8px 10px' }}
+                  style={{ padding: '7px 10px', borderRadius: 'var(--radius-full)' }}
                 >
-                  <LogOut size={16} />
+                  <LogOut size={15} />
                 </button>
               </div>
             ) : (
@@ -189,11 +160,10 @@ export default function Navbar() {
                     setAuthModalOpen(true);
                   }}
                 >
-                  <Phone size={14} />
-                  Đăng Nhập (SĐT)
+                  Đăng Nhập
                 </button>
                 <button
-                  className="btn btn-gold btn-sm"
+                  className="btn btn-primary btn-sm"
                   onClick={() => {
                     setAuthMode('register');
                     setAuthModalOpen(true);
@@ -206,6 +176,56 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+
+      {/* Floating Demo Role Switcher Dock (Clean, Unobtrusive) */}
+      <aside className="floating-role-dock" aria-label="Demo role selector">
+        <button
+          onClick={() => setRoleDockOpen(!roleDockOpen)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--gold-primary)',
+            padding: '4px 8px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '0.74rem',
+            fontWeight: 600
+          }}
+          title="Thu gọn / Mở rộng bảng chuyển vai trò demo"
+        >
+          <Sparkles size={13} />
+          <span>Demo</span>
+          {roleDockOpen ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+        </button>
+
+        {roleDockOpen && (
+          <>
+            <button
+              className={`floating-role-pill ${!currentUser ? 'active' : ''}`}
+              onClick={() => switchRole('guest')}
+              title="Khách vãng lai"
+            >
+              Khách
+            </button>
+            <button
+              className={`floating-role-pill ${currentUser?.role === 'student' ? 'active' : ''}`}
+              onClick={() => switchRole('student')}
+              title="Học viên đã mua khóa học"
+            >
+              Học Viên
+            </button>
+            <button
+              className={`floating-role-pill ${currentUser?.role === 'admin' ? 'active' : ''}`}
+              onClick={() => switchRole('admin')}
+              title="Quản trị viên (Upload ảnh, quản lý khóa học)"
+            >
+              Quản Trị
+            </button>
+          </>
+        )}
+      </aside>
     </>
   );
 }
