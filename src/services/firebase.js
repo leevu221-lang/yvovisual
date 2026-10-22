@@ -10,15 +10,25 @@ import {
 
 const CONFIG_STORAGE_KEY = 'yvo_firebase_config';
 
+export const DEFAULT_FIREBASE_CONFIG = {
+  projectId: "yvosisual-stock",
+  appId: "1:418301285663:web:919d75ce568d7063f1cc2a",
+  storageBucket: "yvosisual-stock.firebasestorage.app",
+  apiKey: "AIzaSyBS_cn2uRRrsEe32gUyxld0EHKBRxWkhW8",
+  authDomain: "yvosisual-stock.firebaseapp.com",
+  messagingSenderId: "418301285663",
+  measurementId: "G-K899B9RCZQ"
+};
+
 // Default / saved config helper
 export function getSavedFirebaseConfig() {
   try {
     const raw = localStorage.getItem(CONFIG_STORAGE_KEY);
-    if (!raw) return null;
+    if (!raw) return DEFAULT_FIREBASE_CONFIG;
     return JSON.parse(raw);
   } catch (err) {
     console.error('Error parsing stored firebase config:', err);
-    return null;
+    return DEFAULT_FIREBASE_CONFIG;
   }
 }
 
