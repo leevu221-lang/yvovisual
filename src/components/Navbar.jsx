@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown, Cloud, Check, RefreshCw } from 'lucide-react';
+import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function Navbar() {
   const {
@@ -10,10 +10,7 @@ export default function Navbar() {
     setCurrentView,
     switchRole,
     setAuthModalOpen,
-    setAuthMode,
-    setFirebaseModalOpen,
-    isFirebaseConnected,
-    cloudSyncStatus
+    setAuthMode
   } = useApp();
 
   const [roleDockOpen, setRoleDockOpen] = useState(true);
@@ -101,59 +98,7 @@ export default function Navbar() {
           </nav>
 
           {/* User Account / Auth Actions */}
-          <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Auto-Sync Cloud Status Pill */}
-            <button
-              onClick={() => setFirebaseModalOpen(true)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '7px',
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-full)',
-                background: isFirebaseConnected 
-                  ? (cloudSyncStatus === 'saving' ? 'rgba(56, 189, 248, 0.12)' : 'rgba(34, 197, 94, 0.1)') 
-                  : 'rgba(255, 255, 255, 0.04)',
-                border: isFirebaseConnected 
-                  ? (cloudSyncStatus === 'saving' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(34, 197, 94, 0.35)') 
-                  : '1px solid var(--border-glass)',
-                color: isFirebaseConnected 
-                  ? (cloudSyncStatus === 'saving' ? '#38bdf8' : '#4ade80') 
-                  : 'var(--text-muted)',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-              title={
-                isFirebaseConnected 
-                  ? 'Chế độ Tự Động Lưu Cloud đang BẬT: Mọi thay đổi dữ liệu đều được lưu tự động lên Firebase' 
-                  : 'Bấm để kết nối Firebase và kích hoạt tự động lưu đám mây'
-              }
-            >
-              {isFirebaseConnected ? (
-                cloudSyncStatus === 'saving' ? (
-                  <>
-                    <RefreshCw size={13} style={{ animation: 'spin 1s linear infinite' }} />
-                    <span>Đang Auto Lưu...</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#38bdf8' }} />
-                  </>
-                ) : (
-                  <>
-                    <Check size={13} color="#22c55e" strokeWidth={2.5} />
-                    <span>Auto Lưu: Bật</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px rgba(34, 197, 94, 0.8)' }} />
-                  </>
-                )
-              ) : (
-                <>
-                  <Cloud size={13} color="var(--gold-primary)" />
-                  <span>Bật Auto Lưu Cloud</span>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#eab308' }} />
-                </>
-              )}
-            </button>
-
+          <div className="nav-actions">
             {currentUser ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div
