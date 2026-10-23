@@ -135,7 +135,32 @@ export const AppProvider = ({ children }) => {
       // Real-time listener for photos
       const unsubPhotos = onSnapshot(collection(db, 'photos'), (snapshot) => {
         if (!snapshot.empty) {
-          const cloudPhotos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          const cloudPhotos = snapshot.docs.map(d => {
+            const raw = d.data();
+            const image = raw.image || raw.url || raw.previewUrl || '';
+            const rawSettings = raw.settings || raw.exif || {};
+            return {
+              id: d.id,
+              title: raw.title || 'Tác phẩm nghệ thuật',
+              category: raw.category || 'portrait',
+              image: image,
+              aspectRatio: raw.aspectRatio || 'portrait',
+              camera: raw.camera || raw.exif?.camera || 'Sony A7R V',
+              lens: raw.lens || raw.exif?.lens || 'FE 50mm F1.2 GM',
+              settings: {
+                aperture: rawSettings.aperture || 'f/2.8',
+                shutter: rawSettings.shutter || rawSettings.shutterSpeed || '1/250s',
+                iso: String(rawSettings.iso || '100'),
+                focalLength: rawSettings.focalLength || '50mm'
+              },
+              location: raw.location || 'Studio YVO VISUAL, Hà Nội',
+              story: raw.story || raw.description || 'Khoảnh khắc ánh sáng và cảm xúc nghệ thuật.',
+              likes: typeof raw.likes === 'number' ? raw.likes : 0,
+              isLiked: !!raw.isLiked,
+              featured: raw.featured !== undefined ? raw.featured : true,
+              date: raw.date || raw.createdAt || '2026-04-01'
+            };
+          });
           setPhotos(cloudPhotos);
         }
       }, (err) => console.warn('Firestore photos listener notice:', err));

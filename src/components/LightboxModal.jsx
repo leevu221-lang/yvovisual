@@ -67,7 +67,7 @@ export default function LightboxModal() {
   const handleDownload = () => {
     showToast(`Đang tải ảnh chất lượng gốc: ${selectedPhoto.title}`, 'info');
     const a = document.createElement('a');
-    a.href = selectedPhoto.image;
+    a.href = selectedPhoto.image || selectedPhoto.url || selectedPhoto.previewUrl;
     a.download = `${selectedPhoto.title}.jpg`;
     a.target = '_blank';
     a.click();
@@ -281,19 +281,19 @@ export default function LightboxModal() {
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>KHẨU ĐỘ</div>
-                <div style={{ color: 'var(--gold-light)', fontWeight: 600 }}>{selectedPhoto.settings.aperture}</div>
+                <div style={{ color: 'var(--gold-light)', fontWeight: 600 }}>{selectedPhoto.settings?.aperture || 'f/2.8'}</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>TỐC ĐỘ MÀN TRẬP</div>
-                <div style={{ color: '#fff', fontWeight: 600 }}>{selectedPhoto.settings.shutter}</div>
+                <div style={{ color: '#fff', fontWeight: 600 }}>{selectedPhoto.settings?.shutter || '1/250s'}</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>ĐỘ NHẠY SÁNG ISO</div>
-                <div style={{ color: '#fff', fontWeight: 600 }}>ISO {selectedPhoto.settings.iso}</div>
+                <div style={{ color: '#fff', fontWeight: 600 }}>ISO {selectedPhoto.settings?.iso || '100'}</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>TIÊU CỰ</div>
-                <div style={{ color: '#fff', fontWeight: 600 }}>{selectedPhoto.settings.focalLength}</div>
+                <div style={{ color: '#fff', fontWeight: 600 }}>{selectedPhoto.settings?.focalLength || '50mm'}</div>
               </div>
             </div>
           </div>

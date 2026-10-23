@@ -26,13 +26,15 @@ export default function PortfolioGallery() {
   ];
 
   // Filtering logic
-  const filteredPhotos = photos.filter(photo => {
+  const filteredPhotos = (photos || []).filter(photo => {
+    if (!photo) return false;
     const matchesCategory = selectedCategory === 'all' || photo.category === selectedCategory;
+    const q = (searchQuery || '').toLowerCase();
     const matchesSearch = 
-      photo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      photo.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      photo.camera.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      photo.lens.toLowerCase().includes(searchQuery.toLowerCase());
+      (photo.title || '').toLowerCase().includes(q) ||
+      (photo.location || '').toLowerCase().includes(q) ||
+      (photo.camera || '').toLowerCase().includes(q) ||
+      (photo.lens || '').toLowerCase().includes(q);
     return matchesCategory && matchesSearch;
   });
 
@@ -503,7 +505,7 @@ export default function PortfolioGallery() {
                         }}
                       >
                         <Camera size={13} color="var(--gold-primary)" />
-                        <span>{photo.camera} • {photo.settings.aperture} • {photo.settings.shutter}</span>
+                        <span>{(photo.camera || 'Sony A7R V')} • {(photo.settings?.aperture || 'f/2.8')} • {(photo.settings?.shutter || '1/250s')}</span>
                       </div>
                     </div>
                   </div>
@@ -663,7 +665,7 @@ export default function PortfolioGallery() {
                         }}
                       >
                         <Camera size={13} color="var(--gold-primary)" />
-                        <span>{photo.camera} • {photo.settings.aperture} • {photo.settings.shutter}</span>
+                        <span>{(photo.camera || 'Sony A7R V')} • {(photo.settings?.aperture || 'f/2.8')} • {(photo.settings?.shutter || '1/250s')}</span>
                       </div>
                     </div>
                   </div>
