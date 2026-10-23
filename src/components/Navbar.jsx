@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Aperture, BookOpen, Image, User, Shield, LogOut, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
+import { 
+  Aperture, BookOpen, Image, User, Shield, LogOut, 
+  Sparkles, ChevronUp, ChevronDown, Crown, GraduationCap, Eye 
+} from 'lucide-react';
 
 export default function Navbar() {
   const {
@@ -109,8 +112,8 @@ export default function Navbar() {
                     gap: '10px',
                     padding: '5px 14px 5px 6px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-glass)',
+                    background: currentUser.role === 'admin' ? 'rgba(212, 175, 55, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                    border: currentUser.role === 'admin' ? '1px solid rgba(212, 175, 55, 0.4)' : '1px solid var(--border-glass)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
@@ -121,7 +124,7 @@ export default function Navbar() {
                       width: '28px',
                       height: '28px',
                       borderRadius: '50%',
-                      background: '#ffffff',
+                      background: currentUser.role === 'admin' ? 'var(--gold-gradient)' : '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -130,14 +133,24 @@ export default function Navbar() {
                       fontSize: '0.8rem'
                     }}
                   >
-                    {currentUser.fullName ? currentUser.fullName.charAt(0) : 'Y'}
+                    {currentUser.role === 'admin' ? <Crown size={14} color="#000" /> : (currentUser.fullName ? currentUser.fullName.charAt(0) : 'U')}
                   </div>
                   <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff' }}>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: currentUser.role === 'admin' ? 'var(--gold-light)' : '#fff' }}>
                       {currentUser.fullName.split(' ').slice(-2).join(' ')}
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-                      {currentUser.role === 'admin' ? 'Quản Trị Viên' : 'Học Viên'}
+                    <div style={{ fontSize: '0.68rem', color: currentUser.role === 'admin' ? 'var(--gold-primary)' : 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      {currentUser.role === 'admin' ? (
+                        <>
+                          <Shield size={10} />
+                          <span>Quản Trị Viên</span>
+                        </>
+                      ) : (
+                        <>
+                          <GraduationCap size={10} />
+                          <span>Học Viên</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -196,7 +209,7 @@ export default function Navbar() {
           title="Thu gọn / Mở rộng bảng chuyển vai trò demo"
         >
           <Sparkles size={13} />
-          <span>Demo</span>
+          <span>Phân Quyền</span>
           {roleDockOpen ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
 
@@ -205,23 +218,27 @@ export default function Navbar() {
             <button
               className={`floating-role-pill ${!currentUser ? 'active' : ''}`}
               onClick={() => switchRole('guest')}
-              title="Khách vãng lai"
+              title="Khách vãng lai: Chỉ xem ảnh và thả tim"
             >
-              Khách
+              <Eye size={12} />
+              <span>Khách</span>
             </button>
             <button
               className={`floating-role-pill ${currentUser?.role === 'student' ? 'active' : ''}`}
               onClick={() => switchRole('student')}
-              title="Học viên đã mua khóa học"
+              title="Học viên: Đã sở hữu khóa học, học bài giảng & tải preset"
             >
-              Học Viên
+              <GraduationCap size={12} />
+              <span>Học Viên</span>
             </button>
             <button
               className={`floating-role-pill ${currentUser?.role === 'admin' ? 'active' : ''}`}
               onClick={() => switchRole('admin')}
-              title="Quản trị viên (Upload ảnh, quản lý khóa học)"
+              title="Quản trị viên: Upload ảnh, đổi album, quản trị doanh thu & bài học"
+              style={currentUser?.role === 'admin' ? { background: 'var(--gold-gradient)', color: '#000', borderColor: 'var(--gold-primary)' } : {}}
             >
-              Quản Trị
+              <Crown size={12} />
+              <span>Quản Trị</span>
             </button>
           </>
         )}

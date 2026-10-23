@@ -119,8 +119,19 @@ export default function UserProfile() {
               </div>
             </div>
 
-            {/* Quick Stats Pill */}
-            <div style={{ display: 'flex', gap: '16px' }}>
+            {/* Quick Stats Pill & Admin Shortcut */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+              {currentUser.role === 'admin' && (
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => setCurrentView('admin')}
+                  style={{ gap: '6px', border: '1px solid var(--border-gold)' }}
+                >
+                  <ShieldCheck size={16} />
+                  <span>Vào Trang Quản Trị</span>
+                </button>
+              )}
+
               <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', textAlign: 'center' }}>
                 <div className="gold-text font-serif" style={{ fontSize: '1.5rem', fontWeight: 800 }}>
                   {enrolledCourses.length}

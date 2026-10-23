@@ -8,9 +8,12 @@ import {
 
 export default function PortfolioGallery() {
   const { 
+    currentUser,
     photos, setSelectedPhoto, toggleLikePhoto, 
     photographerInfo, setCurrentView, albums, openUploadModal 
   } = useApp();
+
+  const isAdmin = currentUser?.role === 'admin';
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('slider'); // 'slider' | 'grid'
@@ -249,22 +252,25 @@ export default function PortfolioGallery() {
                   </button>
                 </div>
 
-                {/* Upload Photo & Album Management Button */}
-                <button
-                  onClick={() => openUploadModal(null)}
-                  className="btn btn-primary"
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '0.84rem',
-                    gap: '6px',
-                    whiteSpace: 'nowrap'
-                  }}
-                  title="Tải ảnh mới hoặc chỉnh sửa/tạo album"
-                >
-                  <UploadCloud size={15} />
-                  <span>+ Tải Ảnh / Đổi Album</span>
-                </button>
+                {/* Upload Photo & Album Management Button (Admin Only) */}
+                {isAdmin && (
+                  <button
+                    onClick={() => openUploadModal(null)}
+                    className="btn btn-primary"
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: 'var(--radius-full)',
+                      fontSize: '0.84rem',
+                      gap: '6px',
+                      whiteSpace: 'nowrap',
+                      border: '1px solid rgba(223, 203, 181, 0.5)'
+                    }}
+                    title="Tải ảnh mới hoặc chỉnh sửa/tạo album (Quyền Admin)"
+                  >
+                    <UploadCloud size={15} />
+                    <span>+ Tải Ảnh / Đổi Album</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -419,31 +425,33 @@ export default function PortfolioGallery() {
                       </span>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openUploadModal(photo);
-                          }}
-                          style={{
-                            background: 'rgba(8, 9, 11, 0.75)',
-                            backdropFilter: 'blur(12px)',
-                            border: '1px solid var(--border-glass)',
-                            borderRadius: 'var(--radius-full)',
-                            padding: '5px 11px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            color: 'var(--gold-light)',
-                            cursor: 'pointer',
-                            fontSize: '0.72rem',
-                            fontWeight: 600,
-                            transition: 'all 0.2s'
-                          }}
-                          title="Đổi album hoặc sửa thông số ảnh"
-                        >
-                          <Edit2 size={12} />
-                          <span>Đổi Album</span>
-                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openUploadModal(photo);
+                            }}
+                            style={{
+                              background: 'rgba(8, 9, 11, 0.75)',
+                              backdropFilter: 'blur(12px)',
+                              border: '1px solid var(--border-glass)',
+                              borderRadius: 'var(--radius-full)',
+                              padding: '5px 11px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '5px',
+                              color: 'var(--gold-light)',
+                              cursor: 'pointer',
+                              fontSize: '0.72rem',
+                              fontWeight: 600,
+                              transition: 'all 0.2s'
+                            }}
+                            title="Đổi album hoặc sửa thông số ảnh"
+                          >
+                            <Edit2 size={12} />
+                            <span>Đổi Album</span>
+                          </button>
+                        )}
 
                         <button
                           onClick={(e) => {
@@ -580,31 +588,33 @@ export default function PortfolioGallery() {
                       </span>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openUploadModal(photo);
-                          }}
-                          style={{
-                            background: 'rgba(8, 9, 11, 0.75)',
-                            backdropFilter: 'blur(12px)',
-                            border: '1px solid var(--border-glass)',
-                            borderRadius: 'var(--radius-full)',
-                            padding: '5px 11px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            color: 'var(--gold-light)',
-                            cursor: 'pointer',
-                            fontSize: '0.72rem',
-                            fontWeight: 600,
-                            transition: 'all 0.2s'
-                          }}
-                          title="Đổi album hoặc sửa thông số ảnh"
-                        >
-                          <Edit2 size={12} />
-                          <span>Đổi Album</span>
-                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openUploadModal(photo);
+                            }}
+                            style={{
+                              background: 'rgba(8, 9, 11, 0.75)',
+                              backdropFilter: 'blur(12px)',
+                              border: '1px solid var(--border-glass)',
+                              borderRadius: 'var(--radius-full)',
+                              padding: '5px 11px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '5px',
+                              color: 'var(--gold-light)',
+                              cursor: 'pointer',
+                              fontSize: '0.72rem',
+                              fontWeight: 600,
+                              transition: 'all 0.2s'
+                            }}
+                            title="Đổi album hoặc sửa thông số ảnh"
+                          >
+                            <Edit2 size={12} />
+                            <span>Đổi Album</span>
+                          </button>
+                        )}
 
                         <button
                           onClick={(e) => {

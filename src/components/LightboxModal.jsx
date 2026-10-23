@@ -7,9 +7,11 @@ import {
 
 export default function LightboxModal() {
   const { 
+    currentUser,
     selectedPhoto, setSelectedPhoto, photos, 
     toggleLikePhoto, showToast, albums, openUploadModal 
   } = useApp();
+  const isAdmin = currentUser?.role === 'admin';
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -93,15 +95,17 @@ export default function LightboxModal() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => openUploadModal(selectedPhoto)}
-            style={{ fontSize: '0.8rem', gap: '6px' }}
-            title="Đổi album hoặc chỉnh sửa thông số tác phẩm"
-          >
-            <Edit2 size={14} />
-            <span>Đổi Album</span>
-          </button>
+          {isAdmin && (
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => openUploadModal(selectedPhoto)}
+              style={{ fontSize: '0.8rem', gap: '6px' }}
+              title="Đổi album hoặc chỉnh sửa thông số tác phẩm (Quyền Admin)"
+            >
+              <Edit2 size={14} />
+              <span>Đổi Album</span>
+            </button>
+          )}
 
           <button
             className="btn btn-secondary btn-sm"
@@ -233,15 +237,17 @@ export default function LightboxModal() {
                 {albums.find(a => a.id === selectedPhoto.category)?.label?.toUpperCase() || selectedPhoto.category.toUpperCase()}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={() => openUploadModal(selectedPhoto)}
-                  style={{ padding: '6px 10px', fontSize: '0.78rem', gap: '4px' }}
-                  title="Đổi album tác phẩm này"
-                >
-                  <Edit2 size={13} />
-                  <span>Đổi Album</span>
-                </button>
+                {isAdmin && (
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => openUploadModal(selectedPhoto)}
+                    style={{ padding: '6px 10px', fontSize: '0.78rem', gap: '4px' }}
+                    title="Đổi album tác phẩm này (Quyền Admin)"
+                  >
+                    <Edit2 size={13} />
+                    <span>Đổi Album</span>
+                  </button>
+                )}
                 <button
                   className={`btn btn-sm ${selectedPhoto.isLiked ? 'btn-gold' : 'btn-secondary'}`}
                   onClick={() => toggleLikePhoto(selectedPhoto.id)}

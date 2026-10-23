@@ -8,6 +8,7 @@ import {
 
 export default function UploadPhotoModal() {
   const { 
+    currentUser,
     uploadModalOpen, setUploadModalOpen, 
     editingPhoto, setEditingPhoto,
     albums, addAlbum, renameAlbum, deleteAlbum,
@@ -81,6 +82,25 @@ export default function UploadPhotoModal() {
   }, [editingPhoto, uploadModalOpen, albums]);
 
   if (!uploadModalOpen) return null;
+
+  if (currentUser?.role !== 'admin') {
+    return (
+      <div className="modal-overlay" onClick={() => setUploadModalOpen(false)}>
+        <div className="modal-content" style={{ maxWidth: '440px', padding: '36px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(212, 175, 55, 0.15)', border: '1px solid var(--border-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--gold-primary)' }}>
+            <AlertCircle size={28} />
+          </div>
+          <h3 className="font-serif" style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '8px' }}>Quyền Quản Trị Viên</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '20px' }}>
+            Chức năng tải tác phẩm và quản trị Album chỉ dành riêng cho Nhiếp ảnh gia Y Võ (Quản trị viên).
+          </p>
+          <button className="btn btn-gold" onClick={() => setUploadModalOpen(false)} style={{ width: '100%' }}>
+            Đã Hiểu
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Client-side image compression using canvas
   const processImageFile = (file) => {

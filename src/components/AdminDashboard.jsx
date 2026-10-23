@@ -19,10 +19,50 @@ export default function AdminDashboard() {
     completePayment, 
     users, 
     grantCourseAccess,
+    setCurrentView,
+    switchRole,
     showToast 
   } = useApp();
 
   const [adminTab, setAdminTab] = useState('overview'); // 'overview' | 'courses' | 'photos' | 'orders' | 'users'
+
+  // Admin Access Guard
+  if (currentUser?.role !== 'admin') {
+    return (
+      <div className="container" style={{ padding: '80px 20px', minHeight: '75vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="glass-panel" style={{ maxWidth: '520px', padding: '48px 36px', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(212, 175, 55, 0.3)' }}>
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(212, 175, 55, 0.12)', border: '1px solid var(--border-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', color: 'var(--gold-primary)' }}>
+            <Shield size={32} />
+          </div>
+          <span className="badge badge-gold" style={{ marginBottom: '12px' }}>KHU VỰC BẢO MẬT</span>
+          <h2 className="font-serif" style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '12px' }}>
+            Yêu Cầu Quyền Quản Trị Viên (Admin)
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '28px' }}>
+            Bạn hiện đang ở chế độ: <strong style={{ color: '#fff' }}>{currentUser ? (currentUser.role === 'student' ? 'Học Viên' : currentUser.role) : 'Khách vãng lai'}</strong>. 
+            Khu vực Quản trị chỉ dành riêng cho Quản trị viên để theo dõi doanh thu, kích hoạt khóa học và quản trị tác phẩm.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <button 
+              className="btn btn-gold btn-lg" 
+              onClick={() => switchRole('admin')}
+              style={{ width: '100%', justifyContent: 'center', gap: '8px' }}
+            >
+              <Sparkles size={18} />
+              <span>Đăng Nhập Quyền Quản Trị Viên (Y Võ)</span>
+            </button>
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => setCurrentView('portfolio')}
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              <span>Quay Lại Trang Triển Lãm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Photo modal state
   const [photoModalOpen, setPhotoModalOpen] = useState(false);

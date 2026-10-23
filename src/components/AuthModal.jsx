@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
   X, Phone, User, ShieldCheck, ArrowRight, Sparkles, 
-  MessageSquare, CheckCircle2, RotateCw
+  MessageSquare, CheckCircle2, RotateCw, Shield, GraduationCap 
 } from 'lucide-react';
+import { INITIAL_USERS } from '../data/initialData';
 
 export default function AuthModal() {
   const { 
@@ -109,6 +110,15 @@ export default function AuthModal() {
     }
 
     const cleanPhone = phoneNumber.replace(/\s+/g, '');
+
+    // Check if admin phone
+    if (cleanPhone === '0988888888') {
+      const admin = users.find(u => u.role === 'admin') || INITIAL_USERS[0];
+      setCurrentUser(admin);
+      showToast(`Đăng nhập thành công với quyền Quản Trị Viên: ${admin.fullName}`, 'success');
+      setAuthModalOpen(false);
+      return;
+    }
 
     // Check if user exists
     let existingUser = users.find(u => u.phoneNumber === cleanPhone);
@@ -346,6 +356,80 @@ export default function AuthModal() {
               </div>
             </form>
           )}
+
+          {/* Quick Demo Role Access Box */}
+          <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
+              <Sparkles size={13} color="var(--gold-primary)" />
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gold-primary)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Đăng Nhập Nhanh Theo Phân Quyền (Demo)
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  const admin = users.find(u => u.role === 'admin') || INITIAL_USERS[0];
+                  setCurrentUser(admin);
+                  setAuthModalOpen(false);
+                  showToast(`Đã đăng nhập với tư cách Quản Trị Viên: ${admin.fullName}`, 'success');
+                }}
+                style={{
+                  background: 'rgba(212, 175, 55, 0.08)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '10px',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <Shield size={14} color="var(--gold-primary)" />
+                  <strong style={{ fontSize: '0.82rem', color: 'var(--gold-light)' }}>👑 Quản Trị (Admin)</strong>
+                </div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                  Y Võ (0988888888)
+                </div>
+                <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginTop: '2px' }}>
+                  Upload ảnh, đổi album, quản lý học viện
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const student = users.find(u => u.role === 'student') || INITIAL_USERS[1];
+                  setCurrentUser(student);
+                  setAuthModalOpen(false);
+                  showToast(`Đã đăng nhập với tư cách Học Viên: ${student.fullName}`, 'success');
+                }}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '10px',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <GraduationCap size={14} color="#60a5fa" />
+                  <strong style={{ fontSize: '0.82rem', color: '#fff' }}>🎓 Học Viên</strong>
+                </div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                  Đỗ Hoàng Long (0912345678)
+                </div>
+                <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginTop: '2px' }}>
+                  Xem bài giảng, tải preset, xem gallery
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

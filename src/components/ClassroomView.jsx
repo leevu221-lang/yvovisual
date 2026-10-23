@@ -17,7 +17,7 @@ export default function ClassroomView() {
   } = useApp();
 
   const course = courses.find(c => c.id === selectedCourseId) || courses[0];
-  const isEnrolled = currentUser?.enrolledCourses?.includes(course?.id);
+  const isEnrolled = currentUser?.role === 'admin' || currentUser?.enrolledCourses?.includes(course?.id);
 
   // Completed lessons state (stored in localStorage)
   const [completedLessonIds, setCompletedLessonIds] = useState(() => {
